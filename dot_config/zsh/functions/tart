@@ -1,0 +1,53 @@
+usage() {
+    echo "list content of various compressed files"
+    echo "usage: $0 <compressedfile>"
+}
+
+# Check if first argument is empty or -h
+if [[ -z "$1" || "$1" == "-h" ]]; then
+    usage
+    return
+fi
+
+if [[ -f "$1" ]]; then
+  # Convert to lowercase using Zsh parameter expansion
+  local _file_lower="${1:l}"
+
+  case "$_file_lower" in
+    *.tar.bz2|*.tbz)
+      tar tjf "$1"
+      ;;
+    *.tar.gz|*.tgz)
+      tar tzf "$1"
+      ;;
+    *.tar.xz)
+      tar tJf "$1"
+      ;;
+    *.tar)
+      tar tf "$1"
+      ;;
+    *.zip)
+      unzip -l "$1"
+      ;;
+    *.rar)
+      unrar l "$1"
+      ;;
+    *.bz2)
+      echo "cannot peek into .bz2"
+      ;;
+    *.gz|*.gzip)
+      gunzip -l "$1"
+      ;;
+    *.z|*.Z)
+      uncompress -l "$1"
+      ;;
+    *)
+      echo "unknown archive format"
+      ;;
+  esac
+else
+  echo "not a valid file"
+fi
+
+
+# vim: ft=zsh:

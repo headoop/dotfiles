@@ -1,0 +1,503 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Sets user-defined palette
+# palette = "catppuccin_macchiato"
+# palette = "catppuccin_mocha"
+
+# format = "$all"
+format = """
+$all\
+$line_break\
+$status\
+$jobs\
+$character\
+"""
+
+add_newline = false
+
+
+[os]
+disabled = true
+format = "[$symbol](cyan) "
+
+[os.symbols]
+Ubuntu = "󰕈"
+Artix = "󰣇"
+Arch = "󰣇"
+CachyOS = "󰣇"
+Macos = ""
+
+[character]
+# '❯' '' '➜' '⟶' '❯' '▶'
+# success_symbol = "[❯](bold green)"
+# catppuccin mocha palette (https://lospec.com/palette-list/catppuccin-mocha)
+# success_symbol = "[❯](bold #a6e3a1)"
+# success_symbol = "[❯](bold dimmed green)"
+# success_symbol = "[❯](dimmed green)"
+success_symbol = "[❯](purple)"
+# catppuccin mocha palette (https://lospec.com/palette-list/catppuccin-mocha)
+# success_symbol = "[❯](bold #a6e3a1)"
+#error_symbol = "[✗](bold red)"
+# success_symbol = "[❯](green)(maroon)"
+error_symbol = "[❯](red)"
+vimcmd_symbol = "[❮](green)"
+# success_symbol = "[❯](green)(maroon)"
+
+[fill]
+symbol = " "
+
+[username]
+# style_user = 'bold green'
+# catppuccin mocha palette
+#style_user = 'bold #a6e3a1'
+# style_user = 'bold dimmed green'
+# style_user = 'dimmed green'
+style_user = "purple"
+# style_user = 'bold green'
+# catppuccin mocha palette
+# style_user = 'bold #a6e3a1'
+# show_always = true
+# format = "[$user]($style)@"
+format = "[$user]($style) "
+# format = "[$user]($style)"
+
+[hostname]
+ssh_only = true
+# format = "[@$hostname]($style) "
+format = "@[$hostname]($style) "
+# style = "bold bright-black"
+# style = "bold yellow"
+# style = 'bold dimmed green'
+# style = 'bold dimmed green'
+# catppuccin mocha palette
+# style = 'bold dimmed green'
+# style = 'dimmed green'
+style = "purple"
+# catppuccin mocha palette
+# style = 'bold green'
+
+# [custom.bash]
+# description = "print 'bash' when in bash"
+# when = """ test "$STARSHIP_SHELL" == "bash" """
+# command = "echo '[bash]'"
+# format = "[$output]($style)"
+# # style = "bold bright-red"
+# # catppuccin mocha palette
+# #style = "bold #eba0ac"
+# # style = "bold mauve"
+# style = "dimmed green"
+# shell = ["bash", "--noprofile", "--norc"]
+
+# [custom.zsh]
+# description = "print 'zsh' when in zsh"
+# when = """ test "$STARSHIP_SHELL" == "zsh" """
+# command = "echo '[zsh]'"
+# format = "[$output]($style)"
+# # style = "bold bright-red"
+# # catppuccin mocha palette
+# #style = "bold #eba0ac"
+# # style = "bold mauve"
+# style = "dimmed green"
+# shell = ["bash", "--noprofile", "--norc"]
+
+# [custom.yazi]
+# description = "Indicate the shell was launched by `yazi`"
+# # symbol = " "
+# when = """ test -n "$YAZI_LEVEL" """
+# command = "echo '[yazi]'"
+# # style = "bold mauve"
+# style = "dimmed green"
+# format = "[$output]($style)"
+
+[directory]
+truncation_length = 0
+# style = "#32afff"
+# read_only = " [ro] "
+# style = "#719fcd"
+# catppuccin mocha palette
+#style = "#b4befe"
+# style = "bold lavender"
+# read_only = "  "
+# read_only = " 🔒 "
+# read_only = " X "
+# read_only_style = "red"
+# style = "#b4befe"
+### style = "italic #719fcd"
+style = "blue"
+read_only = " [ro] "
+read_only_style = "italic dimmed bright-black"
+# truncate_to_repo = false
+
+[git_branch]
+format = "[$symbol $branch ]($style)"
+style = "bright-black"
+# symbol = "git "
+# style = "bold #77216F"
+###style = "#77216F"
+# catppuccin mocha palette
+#style = "bold #fab387"
+# style = "bold #77216F"
+# catppuccin mocha palette
+#style = "bold #fab387"
+symbol = ""
+
+[git_status]
+# $conflicted$stashed$deleted$renamed$modified$staged$untracked
+# style = "purple"
+# style="bright-yellow"
+# style="#fd791f"
+# style="bold #e38f1f"
+# style="bold #ED764D"
+# style="bold #F08763"
+#style = "#E95420"
+# style = "bold #77216F"
+# style = "#77216F"
+# style = "cyan"
+style = "red"
+# conflicted = "="
+conflicted = "✖"
+# ahead = "⇡$count"
+ahead = "↑$count"
+# behind = "⇣$count"
+behind = "↓$count"
+#diverged = "⇕"
+# diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+diverged = "⇕↑${ahead_count}↓${behind_count}"
+up_to_date = ""
+# up_to_date = "✔"
+#untracked = "?$count"
+untracked = "…$count"
+#stashed = "$"
+stashed = "↩"
+# modified = "!$count"
+modified = "✚$count"
+# staged = "+$count"
+# staged = "→$count"
+staged = "●$count"
+renamed = "»$count"
+# renamed = "➟$count"
+deleted = "✘$count"
+#style = "#46304a"
+#style = "#8b6083"
+#style = "#7d5676"
+#style = "#805e79"
+#staged = '[$count ](green)'
+#ahead = "⇡${count}"
+#diverged = "⇕⇡${ahead_count}⇣${behind_count}"
+#behind = "⇣${count}"
+
+# [jobs]
+# symbol = "+ "
+
+[python]
+# symbol = " "
+symbol = " "
+# symbol = "py "
+detect_extensions = []
+detect_files = [
+  ".python-version",
+  "Pipfile",
+  "__init__.py",
+  "pyproject.toml",
+  "requirements.txt",
+  "setup.py",
+  "tox.ini",
+  "manage.py",
+]
+pyenv_version_name = true
+#style = "#94e2d5 bold"
+
+# [shlvl]
+# disabled = false
+# # disabled = true
+# symbol = "↕ "
+# #symbol = " "
+# threshold = 3
+
+[shlvl]
+disabled = false
+format = '[$symbol]($style)'
+repeat = true
+symbol = '❯'
+repeat_offset = 2            # niri session starts from a shell
+
+[status]
+disabled = false
+symbol = ""
+# catppuccin mocha palette
+#style = "bold #eba0ac"
+
+# disabled modules
+[singularity]
+disabled = true
+
+[kubernetes]
+disabled = true
+
+[hg_branch]
+disabled = true
+
+[package]
+disabled = true
+
+[cmake]
+disabled = true
+
+[cobol]
+disabled = true
+
+[dart]
+disabled = true
+
+[deno]
+disabled = true
+
+[dotnet]
+disabled = true
+
+[elixir]
+disabled = true
+
+[elm]
+disabled = true
+
+[erlang]
+disabled = true
+
+[helm]
+disabled = true
+
+[java]
+disabled = true
+
+[julia]
+disabled = true
+
+[kotlin]
+disabled = true
+
+[lua]
+disabled = true
+
+[nim]
+disabled = true
+
+[nodejs]
+disabled = true
+
+[ocaml]
+disabled = true
+
+[perl]
+disabled = true
+
+[php]
+disabled = true
+
+[pulumi]
+disabled = true
+
+[purescript]
+disabled = true
+
+[rlang]
+disabled = true
+
+[red]
+disabled = true
+
+[ruby]
+disabled = true
+
+[rust]
+disabled = true
+
+[scala]
+disabled = true
+
+[swift]
+disabled = true
+
+[terraform]
+disabled = true
+
+[vlang]
+disabled = true
+
+[vagrant]
+disabled = true
+
+[zig]
+disabled = true
+
+[nix_shell]
+disabled = true
+
+[memory_usage]
+disabled = true
+
+[aws]
+disabled = true
+
+[gcloud]
+disabled = true
+
+[openstack]
+disabled = true
+
+[azure]
+disabled = true
+
+[env_var]
+disabled = true
+
+[crystal]
+disabled = true
+
+[cmd_duration]
+disabled = true
+
+[battery]
+disabled = true
+
+[time]
+disabled = true
+
+[shell]
+# disabled = true
+disabled = false
+zsh_indicator = ""
+bash_indicator = "bash"
+# bash_indicator = "󱆃 "
+fish_indicator = "fish"
+# fish_indicator = "󰈺 "
+tcsh_indicator = "tcsh"
+unknown_indicator = "unknown shell"
+# style = 'cyan bold'
+
+[localip]
+disabled = true
+
+[vcsh]
+disabled = false
+# format = '[🆅 $repo](bold blue) '
+# catppuccin mocha palette
+#style = "bold #fab387"
+symbol = "🆅"
+# format = '[vcsh: $repo]($style) '
+# format = '[\(vcsh\) $repo]($style) '
+format = '[$symbol $repo]($style) '
+# format = '[\(vcsh\) $repo](bold blue) '
+
+# palette tables should be last in the config ⚓️
+[palettes.catppuccin_macchiato]
+rosewater = "#f4dbd6"
+flamingo = "#f0c6c6"
+pink = "#f5bde6"
+mauve = "#c6a0f6"
+red = "#ed8796"
+maroon = "#ee99a0"
+peach = "#f5a97f"
+yellow = "#eed49f"
+green = "#a6da95"
+teal = "#8bd5ca"
+sky = "#91d7e3"
+sapphire = "#7dc4e4"
+blue = "#8aadf4"
+lavender = "#b7bdf8"
+text = "#cad3f5"
+subtext1 = "#b8c0e0"
+subtext0 = "#a5adcb"
+overlay2 = "#939ab7"
+overlay1 = "#8087a2"
+overlay0 = "#6e738d"
+surface2 = "#5b6078"
+surface1 = "#494d64"
+surface0 = "#363a4f"
+base = "#24273a"
+mantle = "#1e2030"
+crust = "#181926"
+
+[palettes.catppuccin_frappe]
+rosewater = "#f2d5cf"
+flamingo = "#eebebe"
+pink = "#f4b8e4"
+mauve = "#ca9ee6"
+red = "#e78284"
+maroon = "#ea999c"
+peach = "#ef9f76"
+yellow = "#e5c890"
+green = "#a6d189"
+teal = "#81c8be"
+sky = "#99d1db"
+sapphire = "#85c1dc"
+blue = "#8caaee"
+lavender = "#babbf1"
+text = "#c6d0f5"
+subtext1 = "#b5bfe2"
+subtext0 = "#a5adce"
+overlay2 = "#949cbb"
+overlay1 = "#838ba7"
+overlay0 = "#737994"
+surface2 = "#626880"
+surface1 = "#51576d"
+surface0 = "#414559"
+base = "#303446"
+mantle = "#292c3c"
+crust = "#232634"
+
+[palettes.catppuccin_latte]
+rosewater = "#dc8a78"
+flamingo = "#dd7878"
+pink = "#ea76cb"
+mauve = "#8839ef"
+red = "#d20f39"
+maroon = "#e64553"
+peach = "#fe640b"
+yellow = "#df8e1d"
+green = "#40a02b"
+teal = "#179299"
+sky = "#04a5e5"
+sapphire = "#209fb5"
+blue = "#1e66f5"
+lavender = "#7287fd"
+text = "#4c4f69"
+subtext1 = "#5c5f77"
+subtext0 = "#6c6f85"
+overlay2 = "#7c7f93"
+overlay1 = "#8c8fa1"
+overlay0 = "#9ca0b0"
+surface2 = "#acb0be"
+surface1 = "#bcc0cc"
+surface0 = "#ccd0da"
+base = "#eff1f5"
+mantle = "#e6e9ef"
+crust = "#dce0e8"
+
+[palettes.catppuccin_mocha]
+rosewater = "#f5e0dc"
+flamingo = "#f2cdcd"
+pink = "#f5c2e7"
+mauve = "#cba6f7"
+red = "#f38ba8"
+maroon = "#eba0ac"
+peach = "#fab387"
+yellow = "#f9e2af"
+green = "#a6e3a1"
+teal = "#94e2d5"
+sky = "#89dceb"
+sapphire = "#74c7ec"
+blue = "#89b4fa"
+lavender = "#b4befe"
+text = "#cdd6f4"
+subtext1 = "#bac2de"
+subtext0 = "#a6adc8"
+overlay2 = "#9399b2"
+overlay1 = "#7f849c"
+overlay0 = "#6c7086"
+surface2 = "#585b70"
+surface1 = "#45475a"
+surface0 = "#313244"
+base = "#1e1e2e"
+mantle = "#181825"
+crust = "#11111b"

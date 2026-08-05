@@ -1,0 +1,84 @@
+[mgr]
+ratio = [1, 3, 4]
+sort_by = "natural"
+sort_dir_first = true
+sort_translit = true
+# linemode = "size_and_mtime"
+[opener]
+my_feh = [{ run = 'feh "$@"', block = true }]
+extract = [
+  { run = 'ouch d -y "$@"', desc = "Extract here with ouch", for = "unix" },
+]
+# edit = [
+# 	{ run = 'nvim "$@"', block = true },
+# ]
+# play = [
+# 	{ run = 'mpv "$@"', orphan = true, for = "unix" },
+# ]
+# open = [
+# 	{ run = 'xdg-open "$@"', desc = "Open" },
+# ]
+[open]
+prepend_rules = [{ mime = "image/*", use = "my_feh" }]
+
+# linemode = "size"
+# linemode = "de_mtime"
+# linemode = "mtimev2"
+# linemode = "size_and_de_mtime"
+[plugin]
+# prepend_preloaders = [
+# Office Documents
+# { mime = "application/openxmlformats-officedocument.*", run = "office" },
+# { mime = "application/oasis.opendocument.*", run = "office" },
+# { mime = "application/ms-*", run = "office" },
+# { mime = "application/msword", run = "office" },
+# { name = "*.docx", run = "office" },
+# ]
+# prepend_previewers = [
+# { name = "*.md", run = "glow" },
+# { mime = "audio/*", run = "exifaudio" },
+# { mime = "application/epub+zip", run = "epub-preview" },
+# # Office Documents
+# { mime = "application/openxmlformats-officedocument.*", run = "office" },
+# { mime = "application/oasis.opendocument.*", run = "office" },
+# { mime = "application/ms-*", run = "office" },
+# { mime = "application/msword", run = "office" },
+# { name = "*.docx", run = "office" },
+# odt.yazi is my plugin, copied from glow plugin
+#{ mime = "application/oasis.opendocument.text", run = "odt" },
+# docx.yazi is my plugin, copied from glow plugin
+#{ mime = "application/openxmlformats-officedocument.wordprocessingml.document", run = "docx" },
+# ]
+prepend_preloaders = [
+  # Office Documents
+  { mime = "application/openxmlformats-officedocument.*", run = "office" },
+  { mime = "application/oasis.opendocument.*", run = "office" },
+  { mime = "application/ms-*", run = "office" },
+  { mime = "application/msword", run = "office" },
+  # { name = "*.docx", run = "office" },
+  { url = "*.docx", run = "office" },
+]
+
+prepend_previewers = [
+  # Office Documents
+  { mime = "application/openxmlformats-officedocument.*", run = "office" },
+  { mime = "application/oasis.opendocument.*", run = "office" },
+  { mime = "application/ms-*", run = "office" },
+  { mime = "application/msword", run = "office" },
+  { url = "*.docx", run = "office" },
+  { url = "*.csv", run = "rich-preview" },                                  # for csv files
+  { url = "*.md", run = "rich-preview" },                                   # for markdown (.md) files
+  { url = "*.rst", run = "rich-preview" },                                  # for restructured text (.rst) files
+  { url = "*.ipynb", run = "rich-preview" },                                # for jupyter notebooks (.ipynb)
+  { url = "*.json", run = "rich-preview" },                                 # for json (.json) files
+  # { name = "*.lang_type", run = "rich-preview"} # for particular language files eg. .py, .go., .lua, etc.
+  { mime = "application/{*zip,tar,bzip2,7z*,rar,xz,zstd,java-archive}", run = "ouch" },
+]
+
+[preview]
+image_quality = 90
+max_width = 1800
+max_height = 1800
+
+[tasks]
+image_bound = [65535, 65535]

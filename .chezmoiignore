@@ -1,0 +1,16 @@
+# fish
+# .config
+*~
+**/*~
+README.md
+CLAUDE.md
+.shellcheckrc
+.config/fish/*~
+.config/fish/**/*~
+!.config/fish/conf.d/
+.config/fish/conf.d/**
+!.config/fish/functions
+.config/fish/functions/_**
+.config/fish/functions/fzf_configure_bindings.fish
+!.config/fish/completions
+.config/fish/completions/**

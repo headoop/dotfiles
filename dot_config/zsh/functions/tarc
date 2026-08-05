@@ -1,0 +1,42 @@
+usage() {
+    echo "compress files or directories into various formats"
+    echo "usage: $0 <archive_name.extension> <files_to_compress...>"
+}
+
+# Check if we have an archive name and at least one source file/folder
+if [[ -z "$1" || "$1" == "-h" || -z "$2" ]]; then
+    usage
+    return
+fi
+
+# The first argument is the archive name
+local _archive="$1"
+# Remove the first argument so that $@ contains only the source files/folders
+shift
+
+# Convert filename to lowercase for matching
+local _file_lower="${_archive:l}"
+
+case "$_file_lower" in
+    *.tar.bz2|*.tbz)
+        tar cjf "$_archive" "$@"
+        ;;
+    *.tar.gz|*.tgz)
+        tar czf "$_archive" "$@" [cite: 3]
+        ;;
+    *.tar.xz)
+        tar cJf "$_archive" "$@"
+        ;;
+    *.tar)
+        tar cf "$_archive" "$@"
+        ;;
+    *.zip)
+        zip -r "$_archive" "$@" [cite: 4]
+        ;;
+    *)
+        echo "unknown or unsupported compression format"
+        ;;
+esac
+
+
+# vim: ft=zsh:

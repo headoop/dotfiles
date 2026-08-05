@@ -1,0 +1,61 @@
+source ~/.config/neomutt/muttrc
+set from                  = {{ pass "mail-mailbox-main/email" }}
+set realname              = {{ pass "mail-mailbox-main/name" }}
+set status_format         = "-%r-NeoMutt: %D [Msgs:%<M?%M/>%m%<n? New:%n>%<o? Old:%o>%<d? Del:%d>%<F? Flag:%F>%<t? Tag:%t>%<p? Post:%p>%<b? Inc:%b>%<l? %l>]---(%<T?%T/>%s/%S)-%>-(%P)---"
+set date_format           = "%a, %b %d, %Y at %I:%M:%S%p %Z"
+set imap_user             = {{ pass "mail-mailbox-main/email" }}
+set imap_pass             = "`pass show "mail-mailbox-main/password" }}`"
+set imap_check_subscribed
+unset imap_passive
+set folder                = imaps://{{ pass "mail-mailbox-main/email" }}@imap.mailbox.org
+set spoolfile             = +INBOX
+set postponed             = =Drafts
+set record                = +Sent
+set trash                 = =Trash
+set smtp_pass             = $imap_pass
+set ssl_force_tls         = yes
+set smtp_url              = smtp://$imap_user@smtp.mailbox.org:587
+set ssl_starttls          = yes
+save-hook .               "+Archive/%[%Y]"
+
+# crypt settings
+set pgp_default_key       = "552AEC26DACCC1CD5DDBF899735D0907BFB7F14"
+set crypt_replysign       = yes
+set crypt_replysignencrypted = yes
+set crypt_autosmime       = no
+
+# mailinglists
+subscribe arch-general@archlinux.org \
+          debian-user-german@lists.debian.org \
+          dovecot@listen.jpberlin.de \
+          fish-users@lists.sourceforge.net \
+          postfixbuch-users@listen.jpberlin.de \
+          ubuntu-users@lists.ubuntu.com \
+
+# FOLDER-HOOKS
+folder-hook .             'set sort=date-sent'
+folder-hook .             'set sort_aux=date-received'
+folder-hook .             'set strict_threads'
+folder-hook .             'exec current-middle'
+folder-hook .             'set ispell = "/usr/bin/aspell --mode=email --lang=de_DE check"'
+folder-hook .             'set crypt_verify_sig=ask-no'
+folder-hook .             'set index_format = "%4C %Z %{%b %d} %-15.15L (%?l?%4l&%4c?) %s"'
+
+# folder-hook lists         'set sort=reverse-threads'
+# folder-hook lists         'set sort=threads'
+folder-hook lists        'set use_threads=threads sort=last-date sort_aux=date'
+# folder-hook lists         'set sort_re'
+# folder-hook lists         'set sort_aux=last-date-received'
+folder-hook lists         'unset strict_threads'
+# folder-hook lists         'set use_threads=yes sort=date sort_aux=date'
+folder-hook lists         'set collapse_unread=no'
+folder-hook lists         'unset crypt_verify_sig'
+folder-hook lists         'set index_format = "%4C %Z %{%b %d} %-15.15F (%?l?%4l&%4c?) %s"'
+# folder-hook lists         'set index_format="%?T?%>%-3C?|%3C? %Z %[%b %d] %-15.15F %s"'
+# folder-hook lists         'set index_format = "%4C %Z %{%b%d} %-15.15L (%4l) %**%t** %s"'
+
+set arrow_cursor = no              # optional – Pfeil-Cursor ausschalten
+set indent_string = "  "           # Einrückung bei Threads
+set thread_received = yes          # Sortierung nach Empfangszeit
+# set thread_separators = "│ ├─ └─"
+

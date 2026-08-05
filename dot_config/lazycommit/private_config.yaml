@@ -1,0 +1,8 @@
+active_backend: openai-compatible
+backends:
+    openai-compatible:
+        model: gpt-4o-mini
+        api_key: $OPENAI_API_KEY # plain value or $ENV_VAR reference
+        # base_url: https://api.openai.com/v1   # optional, default is official OpenAI
+        # fallback_models:                      # tried in order when the model fails
+        #   - gpt-4o

@@ -1,0 +1,19 @@
+colors:
+  body: none
+  date: green
+  tags: white
+  title: blue
+default_hour: 9
+default_minute: 0
+editor: nvim
+encrypt: false
+highlight: true
+indent_character: '|'
+journals:
+  default:
+    journal: ~/Dokumente/000-config/journal/journal.txt
+linewrap: false
+tagsymbols: '@'
+template: false
+timeformat: '%Y-%m-%d %H:%M'
+version: v4.3

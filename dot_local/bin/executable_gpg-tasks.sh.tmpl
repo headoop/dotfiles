@@ -1,0 +1,28 @@
+#!/usr/bin/bash
+
+mailto="{{ pass "mail-mailbox-main/email" }}"
+f="$(mktemp -t gpgtasks.XXXXXXXXXX)"
+[[ -f "$f" ]] || exit 1
+
+function finish {
+  rm --force -- "$f" >/dev/null 2>&1
+  echo "$0: interrupted at $1 ... cleaned up."
+  exit 1
+}
+
+trap finish 1 2 3 6 15 # see trap -l
+
+#REFRESH
+gpg --keyserver keyserver.ubuntu.com --refresh-keys >"$f"
+
+#TRUSTDB
+if ! gpg --check-trustdb >>"$f" 2>&1; then
+  echo "gpg --check-trustdb failed!"
+  finish 'TRUSTDB'
+fi
+
+#MAIL
+mailx -s "GPG: monthly tasks" "$mailto" <"$f" || finish 'MAIL'
+
+# at EXIT
+rm --force -- "$f" >/dev/null 2>&1

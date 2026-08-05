@@ -1,0 +1,26 @@
+for dir in $HOME/git/*(/); do
+
+  # ignore non-git directories
+  $(git -C "$dir" rev-parse &>/dev/null) || continue
+
+  cd "$dir"
+  git_status="clean"
+  # unstaged changes check
+  # git diff --exit-code &>/dev/null && echo clean || echo unclean
+  git diff --exit-code &>/dev/null || git_status="unclean"
+  # staged, but not committed changes check
+  git diff --cached --exit-code &>/dev/null || git_status="unclean"
+  # untracked files check
+  [[ -z $(git ls-files --other --exclude-standard --directory --no-empty-directory) ]] || git_status="unclean"
+  # stash check
+  git stash list --exit-code &>/dev/null || git_status="unclean"
+
+  if [[ $git_status == "unclean" ]]; then
+      basename $(git rev-parse --show-toplevel)
+      # git status -s -b -uall --show-stash
+      echo
+  fi
+  cd
+done
+
+# vim: ft=zsh:

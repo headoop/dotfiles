@@ -1,0 +1,46 @@
+# dec2hex: Converts a decimal number to a hexadecimal number.
+#
+# Usage: dec2hex <decimal_number>
+#
+# Arguments:
+#   <decimal_number>: The decimal number to convert.
+#
+# This function validates the input to ensure it is a single argument
+# and that the argument is a valid decimal string. If validation fails,
+# a help message is displayed.
+
+local dec_input="$1"
+local help_message="Usage: dec2hex <decimal_number>\n\nConverts a decimal number (e.g., 10, -255, 0) to its hexadecimal equivalent."
+
+# Check if exactly one argument is provided
+if (( $# != 1 )); then
+  echo "$help_message" >&2
+  return 1
+fi
+
+# Validate if the input is a valid decimal number
+# ^-?[0-9]+$: Matches an optional minus sign, followed by one or more digits.
+if [[ ! "$dec_input" =~ ^-?[0-9]+$ ]]; then
+  echo "Error: '$dec_input' is not a valid decimal number." >&2
+  echo "$help_message" >&2
+  return 1
+fi
+
+local num_val="$dec_input"
+local sign=""
+local hex_abs_val=""
+
+# Handle negative numbers
+if (( num_val < 0 )); then
+  sign="-"
+  num_val=$((-num_val)) # Get absolute value
+fi
+
+# Convert the absolute decimal value to hexadecimal using printf
+# %X for uppercase hexadecimal output
+hex_abs_val=$(printf '%X' "$num_val")
+
+echo "${sign}${hex_abs_val}"
+return 0
+
+# vim: ft=zsh:

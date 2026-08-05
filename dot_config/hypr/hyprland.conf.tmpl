@@ -1,0 +1,614 @@
+# Hyprland Configuration
+# https://wiki.hypr.land/Configuring/
+
+# ==================
+# MONITOR CONFIG
+# ==================
+# Monitors from existing configuration
+# monitor = , preferred, auto, auto
+# monitor = , preferred, auto, 1
+# monitor = eDP-1, 1920x1080, 0x0, 1
+# monitor = DP-1, 1920x1080, 1920x0, 1
+
+{{ if eq .chezmoi.hostname "punk" }}
+# punk
+# Silent Power Electronics GmbH LC-M27UFD
+# monitor = , 3840x2160@160.00, auto, 1.5
+monitorv2 {
+  output = HDMI-A-1
+    mode = 3840x2160@160.00
+    position = 0x0
+    scale = 1.5
+    transform = 0
+}
+#
+{{ else if eq .chezmoi.hostname "ska" }}
+# ska
+monitor = eDP-1, 1920x1080, 0x0, 1
+{{ else }}
+# default
+monitor = , preferred, auto, auto
+{{ end }}
+
+# ==================
+# ENVIRONMENT VARS
+# ==================
+env = QT_QPA_PLATFORM,wayland
+env = ELECTRON_OZONE_PLATFORM_HINT,auto
+env = QT_QPA_PLATFORMTHEME,gtk3
+env = QT_QPA_PLATFORMTHEME_QT6,gtk3
+env = TERMINAL,kitty
+
+# fix frozen doubled cursor
+exec-once = sleep 2.5 && hyprctl dispatch movecursor 9999 9999
+exec-once = sleep 3 && hyprctl dispatch movecursor 1280 720
+env = WLR_NO_HARDWARE_CURSORS,1
+env = WLR_RENDERER_ALLOW_SOFTWARE,1
+exec-once = hyprctl dispatch dpms off
+exec-once = sleep 2 && hyprctl dispatch dpms on
+# end: fix frozen doubled cursor
+
+exec-once = dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
+exec-once = systemctl --user start hyprland-session.target
+
+$terminal = uwsm app -- kitty
+$fileManager = uwsm app -- nautilus --new-window
+$browser = uwsm app -- firefox
+$email = uwsm app -- betterbird
+
+# ==================
+# STARTUP APPS
+# ==================
+# dms is run via systemd --user service
+# exec-once = dms run
+exec-once = bash -c "wl-paste --watch cliphist store &"
+exec-once = /usr/lib/mate-polkit/polkit-mate-authentication-agent-1
+
+# exec-once = [workspace 1 silent] uwsm app -- firefox
+exec-once = [workspace 1 silent] $browser
+exec-once = [workspace 2 silent] uwsm app -- kitty --session ~/.config/kitty/startup-session.conf
+# exec-once = [workspace 3 silent] uwsm app -- betterbird
+exec-once = [workspace 3 silent] $email
+
+# autstart keepassxc in special workspace
+# exec-once = [workspace special:keepassx silent] uwsm app -- keepassxc
+# exec-once = sleep 1; hyprctl dispatch togglespecialworkspace keepassx
+# exec-once = [workspace special:bitwarden silent] bitwarden-desktop
+exec-once = [workspace special:bitwarden] bash -c 'sleep 5 && bitwarden-desktop --ozone-platform=wayland'
+# exec-once = [workspace special:bitwarden] uwsm app -- electron36 /usr/lib/bitwarden/app.asar
+# exec-once = uwsm app -- bitwarden-desktop
+exec-once = sleep 10; hyprctl dispatch togglespecialworkspace bitwarden
+
+# autostart udiskie for automounting/removing of usb drives
+exec-once = uwsm app -- udiskie --tray
+
+# ==================
+# INPUT CONFIG
+# ==================
+input {
+    kb_layout = de,us
+    kb_options = ctrl:nocaps,grp:alt_space_toggle
+    numlock_by_default = true
+    follow_mouse = 1
+}
+
+# ==================
+# GENERAL LAYOUT
+# ==================
+general {
+{{ if eq .chezmoi.hostname "punk" }}
+    gaps_in = 20
+    gaps_out = 20
+{{ else }}
+    gaps_in = 5
+    gaps_out = 5
+{{ end }}
+    border_size = 0  # off in niri
+
+    col.active_border = rgba(707070ff)
+    # col.active_border = rgba(202020ff)
+    col.inactive_border = rgba(d0d0d0ff)
+
+    layout = dwindle
+}
+
+# ==================
+# DECORATION
+# ==================
+decoration {
+    rounding = 12
+
+    active_opacity = 1.0
+    inactive_opacity = 0.9
+
+    shadow {
+        enabled = true
+        range = 30
+        render_power = 5
+        offset = 0 5
+        color = rgba(00000070)
+    }
+}
+
+# ==================
+# ANIMATIONS
+# ==================
+animations {
+    enabled = true
+
+    animation = windowsIn, 1, 3, default
+    animation = windowsOut, 1, 3, default
+    animation = workspaces, 1, 5, default
+    animation = windowsMove, 1, 4, default
+    animation = fade, 1, 3, default
+    animation = border, 1, 3, default
+}
+
+# ==================
+# LAYOUTS
+# ==================
+dwindle {
+    preserve_split = true
+    force_split = 2 # Always split on the right
+}
+
+master {
+    mfact = 0.5
+}
+
+# ==================
+# MISC
+# ==================
+misc {
+    disable_hyprland_logo = true
+    disable_splash_rendering = true
+    vrr = 1
+    force_default_wallpaper = 0 # Set to 0 or 1 to disable the anime mascot wallpapers
+}
+
+# ==================
+# WINDOW RULES
+# ==================
+# windowrulev2 = tile, class:^(org\.wezfurlong\.wezterm)$
+# windowrulev2 = noborder, class:^(org\.wezfurlong\.wezterm)$
+windowrule {
+  name = windowrule-1
+  tile = on
+  border_size = 0
+  match:class = ^(org\.wezfurlong\.wezterm)$
+}
+
+# windowrulev2 = rounding 12, class:^(org\.gnome\.)
+# windowrulev2 = noborder, class:^(org\.gnome\.)
+windowrule {
+  name = windowrule-2
+  rounding = 12
+  border_size = 0
+  match:class = ^(org\.gnome\.)
+}
+
+# windowrulev2 = tile, class:^(gnome-control-center)$
+windowrule {
+  name = windowrule-3
+  tile = on
+  match:class = ^(gnome-control-center)$
+}
+
+# windowrulev2 = tile, class:^(pavucontrol)$
+windowrule {
+  name = windowrule-4
+  tile = on
+  match:class = ^(pavucontrol)$
+}
+
+# windowrulev2 = tile, class:^(nm-connection-editor)$
+windowrule {
+  name = windowrule-5
+  tile = on
+  match:class = ^(nm-connection-editor)$
+}
+
+# windowrulev2 = float, class:^(gnome-calculator)$
+windowrule {
+  name = windowrule-6
+  # size = (monitor_w*0.4) (monitor_h*0.3)
+  size = (window_w*200/monitor_w) (window_h*200/monitor_h)
+  float = on
+  match:class = ^(org.gnome.Calculator)$
+}
+
+# windowrulev2 = float, class:^(galculator)$
+windowrule {
+  name = windowrule-7
+  float = on
+  match:class = ^(galculator)$
+}
+
+# windowrulev2 = float, class:^(blueman-manager)$
+windowrule {
+  name = windowrule-8
+  float = on
+  match:class = ^(blueman-manager)$
+}
+
+# windowrulev2 = float, class:^(org\.gnome\.Nautilus)$
+# windowrule {
+#   name = windowrule-666
+#   float = on
+#   match:class = ^(org\.gnome\.Nautilus)$
+# }
+
+# windowrulev2 = float, class:^(steam)$
+windowrule {
+  name = windowrule-9
+  float = on
+  match:class = ^(steam)$
+}
+
+# windowrulev2 = float, class:^(xdg-desktop-portal)$
+windowrule {
+  name = windowrule-10
+  float = on
+  match:class = ^(xdg-desktop-portal)$
+}
+
+# windowrulev2 = noborder, class:^(Alacritty)$
+windowrule {
+  name = windowrule-11
+  border_size = 0
+  match:class = ^(Alacritty)$
+}
+
+# windowrulev2 = noborder, class:^(zen)$
+windowrule {
+  name = windowrule-12
+  border_size = 0
+  match:class = ^(zen)$
+}
+
+# windowrulev2 = noborder, class:^(com\.mitchellh\.ghostty)$
+windowrule {
+  name = windowrule-13
+  border_size = 0
+  match:class = ^(com\.mitchellh\.ghostty)$
+}
+
+# windowrulev2 = noborder, class:^(kitty)$
+windowrule {
+  name = windowrule-14
+  border_size = 0
+  match:class = ^(kitty)$
+}
+
+
+# windowrulev2 = float, class:^(firefox)$, title:^(Picture-in-Picture)$
+windowrule {
+  name = windowrule-15
+  float = on
+  match:class = ^(firefox)$
+  match:title = ^(Picture-in-Picture)$
+}
+
+# windowrulev2 = float, class:^(zoom)$
+windowrule {
+  name = windowrule-16
+  float = on
+  match:class = ^(zoom)$
+}
+
+
+# windowrulev2 = opacity 0.9 0.9, floating:0, focus:0
+windowrule {
+  name = windowrule-17
+  opacity = 0.9 0.9
+  match:float = 0
+  match:focus = 0
+}
+
+
+# windowrulev2 = workspace special:keepassx, class:^(org.keepassxc.KeePassXC)$
+# windowrule {
+#   name = windowrule-18
+#   workspace = special:keepassx
+#   match:class = ^(org.keepassxc.KeePassXC)$
+# }
+
+# Thunderbird mail compose window floating
+# windowrulev2 = float,class:^(thunderbird)$,initialTitle:^(Verfassen: \(Kein Betreff\))$
+# windowrulev2 = float,class:^(eu.betterbird.Betterbird)$,initialTitle:^(Verfassen: \(Kein Betreff\))$
+
+# windowrulev2 = float,class:^(eu.betterbird.Betterbird)$,initialTitle:^(Kalendererinnerungen)$
+# windowrulev2 = size 40% 30%, class:^(eu.betterbird.Betterbird)$,initialTitle:^(Kalendererinnerungen)$
+windowrule {
+  name = windowrule-19
+  float = on
+  size = (monitor_w*0.4) (monitor_h*0.3)
+  match:class = ^(eu.betterbird.Betterbird)$
+  match:initial_title = ^(Kalendererinnerungen)$
+}
+
+# windowrulev2 = size 60% 50%, class:^(org.pulseaudio.pavucontrol)$
+windowrule {
+  name = windowrule-20
+  size = (monitor_w*0.6) (monitor_h*0.5)
+  match:class = ^(org.pulseaudio.pavucontrol)$
+}
+
+# windowrulev2 = float, class:^(firefox)$, title:^(Bild-im-Bild)$
+# windowrulev2 = size 30%, class:^(firefox)$, title:^(Bild-im-Bild)$
+# windowrulev2 = move 69% 69%, class:^(firefox)$, title:^(Bild-im-Bild)$
+windowrule {
+  name = windowrule-21
+  float = on
+  size = (monitor_w*0.3) (monitor_h*0.3)
+  # move = ((monitor_w*0.69)) ((monitor_h*0.69))
+  move = (monitor_w*0.69) (monitor_h*0.69)
+  match:class = ^(firefox)$
+  match:title = ^(Bild-im-Bild)$
+}
+
+# windowrulev2 = focusonactivate, class:.*
+windowrule {
+  name = windowrule-22
+  focus_on_activate = on
+  match:class = .*
+}
+
+windowrule {
+  name = windowrule-23
+  workspace = special:bitwarden
+  match:class = ^(Bitwarden)$
+}
+
+# layerrule = noanim, ^(quickshell)$
+layerrule {
+  name = layerrule-1
+  no_anim = on
+  match:namespace = ^(quickshell)$
+}
+
+layerrule {
+  name = layerrule-2
+  no_anim = on
+  match:namespace = ^(dms)$
+}
+
+# ==================
+# KEYBINDINGS
+# ==================
+$mod = SUPER
+# $resetSubMap = hyprctl dispatch submap reset
+
+
+# === Application Launchers ===
+bind = $mod Shift, RETURN, exec, $browser
+bind = $mod, T, exec, $terminal
+bind = $mod, RETURN, exec, $terminal
+bind = $mod, E, exec, $fileManager
+bind = $mod CTRL, return, exec, $email
+bind = $mod SHIFT, M, exec, music.sh
+bind = $mod, XF86HomePage, exec, uwsm app -- joplin-desktop
+
+# bindd = $mainMod SHIFT, W, WhatsApp, exec, hypr25-whatsapp-app
+# WhatsApp Web App
+bind = $mod SHIFT, W, exec, chromium --profile-directory=Default --app-id=hnpfjngllnobngcgfapefoaidbinmjnm
+# Signal Desktop App
+bind = $mod SHIFT, G, exec, uwsm app -- signal-desktop --password-store=gnome-libsecret
+# Google Calendar Web App
+bind = $mod SHIFT, C, exec, chromium --profile-directory=Default --app-id=kjbdgfilnfhdoflbpgamdcdgpehopbep
+# webmail.ondataport.de Web App
+bind = $mod SHIFT, J, exec, chromium --profile-directory=Default --app-id=ghoplmdfocnckmbbjfgecbiadpjamnla
+# bind = $mod, K, togglespecialworkspace, keepassx
+bind = $mod, B, togglespecialworkspace, bitwarden
+
+# Switch sound output device
+# bindd = CTRL ALT, L, Switch audio out to speaker, exec, pactl set-default-sink alsa_output.pci-0000_14_00.6.analog-stereo
+# bindd = CTRL ALT, K, Switch audio out to headphone, exec, pactl set-default-sink alsa_output.usb-Sennheiser_Sennheiser_PC_8.2_USB_A002900200111439-00.analog-stereo
+# bind = CTRL ALT, L, exec, hypr25-toggle-audio-sink
+bind = CTRL ALT, L, exec, cycle-sink-move-all.sh
+
+bind = $mod, space, exec, dms ipc call spotlight toggle
+bind = $mod, V, exec, dms ipc call clipboard toggle
+bind = $mod, M, exec, dms ipc call processlist toggle
+bind = $mod, comma, exec, dms ipc call settings toggle
+bind = $mod, N, exec, dms ipc call notifications toggle
+bind = $mod SHIFT, N, exec, dms ipc call notepad toggle
+bind = $mod, Y, exec, dms ipc call dankdash wallpaper
+bind = $mod, TAB, exec, dms ipc call hypr toggleOverview
+
+# === Cheat sheet
+# bind = $mod SHIFT, Slash, exec, dms ipc call keybinds toggle hyprland
+bind = $mod SHIFT, K, exec, dms ipc call keybinds toggle hyprland
+
+# === Security ===
+#bind = $mod ALT, L, exec, dms ipc call lock lock
+bind = $mod, L, exec, dms ipc call lock lock
+# bind = $mod SHIFT, E, exit
+bind = $mod SHIFT, E, exec, uwsm stop
+# bind = $mod SHIFT, E, uwsm app -- hyprland logout
+bind = CTRL ALT, Delete, exec, dms ipc call processlist toggle
+
+# === Audio Controls ===
+bindel = , XF86AudioRaiseVolume, exec, dms ipc call audio increment 3
+bindel = , XF86AudioLowerVolume, exec, dms ipc call audio decrement 3
+bindl = , XF86AudioMute, exec, dms ipc call audio mute
+bindl = , XF86AudioMicMute, exec, dms ipc call audio micmute
+
+# === Brightness Controls ===
+bindel = , XF86MonBrightnessUp, exec, dms ipc call brightness increment 5 ""
+bindel = , XF86MonBrightnessDown, exec, dms ipc call brightness decrement 5 ""
+
+# === Window Management ===
+bind = $mod, Q, killactive
+bind = $mod, F, fullscreen, 1
+bind = $mod SHIFT, F, fullscreen, 0
+bind = $mod SHIFT, T, togglefloating
+bind = $mod, W, togglegroup
+
+bind = $mod, P, pseudo, # dwindle
+
+# === Focus Navigation ===
+bind = $mod, left, movefocus, l
+bind = $mod, down, movefocus, d
+bind = $mod, up, movefocus, u
+bind = $mod, right, movefocus, r
+bind = $mod, H, movefocus, l
+bind = $mod, J, movefocus, d
+bind = $mod, K, movefocus, u
+bind = $mod, L, movefocus, r
+
+# === Window Movement ===
+bind = $mod SHIFT, left, movewindow, l
+bind = $mod SHIFT, down, movewindow, d
+bind = $mod SHIFT, up, movewindow, u
+bind = $mod SHIFT, right, movewindow, r
+bind = $mod SHIFT, H, movewindow, l
+bind = $mod SHIFT, J, movewindow, d
+bind = $mod SHIFT, K, movewindow, u
+bind = $mod SHIFT, L, movewindow, r
+
+# === Column Navigation ===
+bind = $mod, Home, focuswindow, first
+bind = $mod, End, focuswindow, last
+
+# === Monitor Navigation ===
+# bind = $mod CTRL, left, focusmonitor, l
+# bind = $mod CTRL, right, focusmonitor, r
+bind = $mod CTRL, H, focusmonitor, l
+bind = $mod CTRL, J, focusmonitor, d
+bind = $mod CTRL, K, focusmonitor, u
+bind = $mod CTRL, L, focusmonitor, r
+
+# === Move to Monitor ===
+# bind = $mod SHIFT CTRL, left, movewindow, mon:l
+# bind = $mod SHIFT CTRL, down, movewindow, mon:d
+# bind = $mod SHIFT CTRL, up, movewindow, mon:u
+# bind = $mod SHIFT CTRL, right, movewindow, mon:r
+bind = $mod SHIFT CTRL, H, movewindow, mon:l
+bind = $mod SHIFT CTRL, J, movewindow, mon:d
+bind = $mod SHIFT CTRL, K, movewindow, mon:u
+bind = $mod SHIFT CTRL, L, movewindow, mon:r
+
+# === Workspace Navigation ===
+bind = $mod CTRL, right, workspace, +1
+bind = $mod CTRL, left, workspace, -1
+bind = $mod, Page_Down, workspace, e+1
+bind = $mod, Page_Up, workspace, e-1
+bind = $mod, U, workspace, e+1
+bind = $mod, I, workspace, e-1
+bind = $mod CTRL, down, movetoworkspace, e+1
+bind = $mod CTRL, up, movetoworkspace, e-1
+bind = $mod CTRL, U, movetoworkspace, e+1
+bind = $mod CTRL, I, movetoworkspace, e-1
+
+# === Move Workspaces ===
+bind = $mod SHIFT, Page_Down, movetoworkspace, e+1
+bind = $mod SHIFT, Page_Up, movetoworkspace, e-1
+bind = $mod SHIFT, U, movetoworkspace, e+1
+bind = $mod SHIFT, I, movetoworkspace, e-1
+
+# === Mouse Wheel Navigation ===
+bind = $mod, mouse_down, workspace, e+1
+bind = $mod, mouse_up, workspace, e-1
+bind = $mod CTRL, mouse_down, movetoworkspace, e+1
+bind = $mod CTRL, mouse_up, movetoworkspace, e-1
+
+# === Numbered Workspaces ===
+bind = $mod, 1, workspace, 1
+bind = $mod, 2, workspace, 2
+bind = $mod, 3, workspace, 3
+bind = $mod, 4, workspace, 4
+bind = $mod, 5, workspace, 5
+bind = $mod, 6, workspace, 6
+bind = $mod, 7, workspace, 7
+bind = $mod, 8, workspace, 8
+bind = $mod, 9, workspace, 9
+
+# === Move to Numbered Workspaces ===
+bind = $mod SHIFT, 1, movetoworkspace, 1
+bind = $mod SHIFT, 2, movetoworkspace, 2
+bind = $mod SHIFT, 3, movetoworkspace, 3
+bind = $mod SHIFT, 4, movetoworkspace, 4
+bind = $mod SHIFT, 5, movetoworkspace, 5
+bind = $mod SHIFT, 6, movetoworkspace, 6
+bind = $mod SHIFT, 7, movetoworkspace, 7
+bind = $mod SHIFT, 8, movetoworkspace, 8
+bind = $mod SHIFT, 9, movetoworkspace, 9
+
+# Move active window to next/previous workspace with mainMod + SHIFT + CTRL + arrow keys
+bind = $mod SHIFT CTRL, right, movetoworkspace, +1
+bind = $mod SHIFT CTRL, left, movetoworkspace, -1
+
+# Cycle through applications on active workspace
+bind = ALT, Tab, cyclenext
+bind = ALT SHIFT, Tab, cyclenext, prev
+bind = ALT, Tab, bringactivetotop
+bind = ALT SHIFT, Tab, bringactivetotop
+
+# Example special workspace (scratchpad)
+bind = $mod, S, togglespecialworkspace, magic
+bind = $mod SHIFT, S, movetoworkspace, special:magic
+
+# === Column Management ===
+bind = $mod, bracketleft, layoutmsg, preselect l
+bind = $mod, bracketright, layoutmsg, preselect r
+
+# === Sizing & Layout ===
+bind = $mod, R, layoutmsg, togglesplit
+bind = $mod CTRL, F, resizeactive, exact 100%
+
+# === Move/resize windows with mainMod + LMB/RMB and dragging ===
+bindmd = $mod, mouse:272, Move window, movewindow
+bindmd = $mod, mouse:273, Resize window, resizewindow
+
+# === Move/resize windows with mainMod + LMB/RMB and dragging ===
+bindd = $mod, code:20, Expand window left, resizeactive, -100 0
+bindd = $mod, code:21, Shrink window left, resizeactive, 100 0
+
+# === Manual Sizing ===
+binde = $mod, minus, resizeactive, -10% 0
+binde = $mod, plus, resizeactive, 10% 0
+binde = $mod SHIFT, minus, resizeactive, 0 -10%
+binde = $mod SHIFT, plus, resizeactive, 0 10%
+
+# === Screenshots ===
+# bind = , XF86Launch1, exec, grimblast copy area
+# bind = CTRL, XF86Launch1, exec, grimblast copy screen
+# bind = ALT, XF86Launch1, exec, grimblast copy active
+# bind = , Print, exec, grimblast copy area
+# bind = CTRL, Print, exec, grimblast copy screen
+# bind = ALT, Print, exec, grimblast copy active
+
+{{ if eq .chezmoi.hostname "punk" }}
+$my_monitor = "HDMI-A-1"
+{{ else if eq .chezmoi.hostname "ska" }}
+$my_monitor = "eDP-1"
+{{ end }}
+bind = , Print, exec, hyprshot --output-folder ~/Bilder/Screenshots -m output -m $my_monitor
+bind = CTRL , Print, exec, hyprshot --output-folder ~/Bilder/Screenshots -m window -m active
+bind = ALT , Print, exec, hyprshot --output-folder ~/Bilder/Screenshots -m region
+
+# calculator
+bind = , XF86Calculator, exec, gnome-calculator
+
+{{ if stat (joinPath .chezmoi.homeDir ".config/hypr/dms/colors.conf") }}
+# auto-generated includes from dms
+source = ./dms/colors.conf
+{{ end }}
+{{ if stat (joinPath .chezmoi.homeDir ".config/hypr/dms/cursor.conf") }}
+source = ./dms/cursor.conf
+{{ end }}
+{{ if stat (joinPath .chezmoi.homeDir ".config/hypr/dms/layout.conf") }}
+source = ./dms/layout.conf
+{{ end }}
+{{ if stat (joinPath .chezmoi.homeDir ".config/hypr/dms/outputs.conf") }}
+source = ./dms/outputs.conf
+{{ end }}
+{{ if stat (joinPath .chezmoi.homeDir ".config/hypr/dms/windowrules.conf") }}
+source = ./dms/windowrules.conf
+{{ end }}
+
+# === System Controls ===
+# bind = $mod SHIFT, P, dpms, off
+#
+# vim: set ft=hyprlang:

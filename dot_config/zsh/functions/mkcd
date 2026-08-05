@@ -1,0 +1,33 @@
+# Creates a directory and changes the current directory to it.
+#
+# Usage: mkcd <directory-path>
+#
+# Arguments:
+#   $1: The path for the new directory.
+#
+# Examples:
+#   # Create a directory named 'my-new-project' and enter it
+#   mkcd my-new-project
+#
+#   # Create a nested path and enter the final directory
+#   mkcd ./projects/personal/new-idea
+
+# Check if a directory path was provided as an argument.
+if [[ -z "$1" ]]; then
+  # If no argument is given, print a usage message to standard error.
+  echo "Usage: mkcd <directory-path>" >&2
+  return 1
+fi
+
+# Create the specified directory.
+# The '-p' flag ensures that all parent directories are created if they don't exist.
+# The '--' argument signifies the end of options, preventing paths starting with '-' from being treated as flags.
+# If 'mkdir' is successful, then change the current directory to the new one.
+# If either 'mkdir' or 'cd' fails, the '||' block is executed.
+mkdir -p -- "$1" && cd -- "$1" || {
+  # Print an error message to standard error if directory creation or changing fails.
+  echo "Error: Failed to create or change to directory '$1'" >&2
+  return 1
+}
+
+# vim: ft=zsh:

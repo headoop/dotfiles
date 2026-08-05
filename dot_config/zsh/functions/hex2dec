@@ -1,0 +1,36 @@
+# hex2dec: Converts a hexadecimal number to a decimal number.
+#
+# Usage: hex2dec <hexadecimal_number>
+#
+# Arguments:
+#   <hexadecimal_number>: The hexadecimal number to convert.
+#
+# This function validates the input to ensure it is a single argument
+# and that the argument is a valid hexadecimal string. If validation fails,
+# a help message is displayed.
+
+local hex_input="$1"
+local help_message="Usage: hex2dec <hexadecimal_number>\n\nConverts a hexadecimal number (e.g., FF, 1a, 007) to its decimal equivalent."
+
+# Check if exactly one argument is provided
+if (( $# != 1 )); then
+  echo "$help_message" >&2
+  return 1
+fi
+
+# Validate if the input is a valid hexadecimal number
+# ^[0-9a-fA-F]+$: Matches one or more hex characters (0-9, a-f, A-F) from start to end.
+if [[ ! "$hex_input" =~ ^[0-9a-fA-F]+$ ]]; then
+  echo "Error: '$hex_input' is not a valid hexadecimal number." >&2
+  echo "$help_message" >&2
+  return 1
+fi
+
+# Convert hexadecimal to decimal using zsh's built-in base conversion
+# 16# prefix indicates a base-16 (hexadecimal) number.
+local decimal_output=$((16#$hex_input))
+
+echo "$decimal_output"
+return 0
+
+# vim: ft=zsh:

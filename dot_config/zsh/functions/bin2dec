@@ -1,0 +1,36 @@
+# bin2dec: Converts a binary number to a decimal number.
+#
+# Usage: bin2dec <binary_number>
+#
+# Arguments:
+#   <binary_number>: The binary number to convert.
+#
+# This function validates the input to ensure it is a single argument
+# and that the argument is a valid binary string. If validation fails,
+# a help message is displayed.
+
+local bin_input="$1"
+local help_message="Usage: bin2dec <binary_number>\n\nConverts a binary number (e.g., 1011, 001, 1) to its decimal equivalent."
+
+# Check if exactly one argument is provided
+if (( $# != 1 )); then
+  echo "$help_message" >&2
+  return 1
+fi
+
+# Validate if the input is a valid binary number
+# ^[01]+$: Matches one or more binary digits (0 or 1) from start to end.
+if [[ ! "$bin_input" =~ ^[01]+$ ]]; then
+  echo "Error: '$bin_input' is not a valid binary number." >&2
+  echo "$help_message" >&2
+  return 1
+fi
+
+# Convert binary to decimal using zsh's built-in base conversion
+# 2# prefix indicates a base-2 (binary) number.
+local decimal_output=$((2#$bin_input))
+
+echo "$decimal_output"
+return 0
+
+# vim: ft=zsh:

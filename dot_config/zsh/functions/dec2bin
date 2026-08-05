@@ -1,0 +1,39 @@
+# dec2bin: Converts a decimal number to a binary number.
+#
+# Usage: dec2bin <decimal_number>
+#
+# Arguments:
+#   <decimal_number>: The decimal number to convert.
+#
+# This function validates the input to ensure it is a single argument
+# and that the argument is a valid decimal string. If validation fails,
+# a help message is displayed.
+
+local dec_input="$1"
+local help_message="Usage: dec2bin <decimal_number>\n\nConverts a decimal number (e.g., 10, -5, 0) to its binary equivalent."
+
+# Check if exactly one argument is provided
+if (( $# != 1 )); then
+  echo "$help_message" >&2
+  return 1
+fi
+
+# Validate if the input is a valid decimal number
+# ^-?[0-9]+$: Matches an optional minus sign, followed by one or more digits.
+if [[ ! "$dec_input" =~ ^-?[0-9]+$ ]]; then
+  echo "Error: '$dec_input' is not a valid decimal number." >&2
+  echo "$help_message" >&2
+  return 1
+fi
+
+local num_val="$dec_input"
+local binary_output=""
+
+# Convert decimal to binary using zsh's base parameter expansion
+# (base:2) converts the number to its base-2 (binary) string representation.
+binary_output="${(base:2)num_val}"
+
+echo "$binary_output"
+return 0
+
+# vim: ft=zsh:

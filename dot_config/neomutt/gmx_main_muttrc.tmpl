@@ -1,0 +1,23 @@
+source ~/.config/neomutt/muttrc
+set from                  = {{ pass "mail-gmx-main/email" }}
+set realname              = {{ pass "mail-gmx-main/name" }}
+set status_format         = "-%r-NeoMutt: %D [Msgs:%<M?%M/>%m%<n? New:%n>%<o? Old:%o>%<d? Del:%d>%<F? Flag:%F>%<t? Tag:%t>%<p? Post:%p>%<b? Inc:%b>%<l? %l>]---(%<T?%T/>%s/%S)-%>-(%P)---"
+# set index_format          = "%4C %Z %{%b %d} %-15.15L (%4l) %s"
+set index_format          = "%4C %Z %{%b %d} %-15.15L (%?l?%4l&%4c?) %s"
+set imap_user             = {{ pass "mail-gmx-main/email" }}
+set imap_pass             = "`pass "show mail-gmx-main/password"`"
+set imap_check_subscribed
+unset imap_passive
+set folder                = "imaps://imap.gmx.net:993"
+set spoolfile             = =INBOX
+set postponed             = =Entwürfe
+set record                = =Gesendet
+set trash                 = =Gelöscht
+set smtp_pass             = $imap_pass
+set ssl_force_tls         = yes
+set smtp_url              = smtp://$imap_user@mail.gmx.net:587
+set ssl_starttls          = yes
+save-hook .               "+Archiv/%[%Y]"
+# folder-hook . 'macro index d "<save-message>=Gelöscht<enter>"'
+# folder-hook =Gelöscht 'macro index d <delete-message>
+set date_format           = "%a, %b %d, %Y at %I:%M:%S%p %Z"

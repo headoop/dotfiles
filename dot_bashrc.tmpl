@@ -1,0 +1,66 @@
+# shellcheck disable=all
+
+# ~/.bashrc
+#
+
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
+
+bind "set show-all-if-ambiguous on"
+bind "TAB:menu-complete"
+
+[[ -d $HOME/.local/bin ]] && export PATH="$HOME/.local/bin:$PATH"
+[[ -d $HOME/.cargo/bin ]] && export PATH="$HOME/.cargo/bin:$PATH"
+[[ -d $HOME/.go/bin ]] && export PATH="$HOME/.go/bin:$PATH"
+
+[[ -x /usr/bin/lesspipe.sh ]] && eval "$(lesspipe.sh)"
+
+# shellcheck disable=SC2140 # Word is of the form "A"B"C" (B indicated). Did you mean "ABC" or "A\"B\"C"?
+export ANTHROPIC_API_KEY="{{ pass "ANTHROPIC_API_KEY" }}"
+export OPENAI_API_KEY="{{ pass "OPENAI_API_KEY" }}"
+export DIFFPROG="nvim -d"
+export EDITOR="nvim"
+EZA_COLORS="$(vivid generate tokyonight-moon)"
+export EZA_COLORS
+export LC_MESSAGES="en_US.UTF-8"
+export LESS="-R -M -i -w"
+export MOZ_ENABLE_WAYLAND=1
+export MPD_PORT=6601
+export PAGER="less"
+export PRINTER="GraustufenNormalDuplex"
+export VISUAL="nvim"
+GPG_TTY=$(tty)
+export GPG_TTY
+_eza_options="--group --group-directories-first --icons=auto --color=auto"
+
+# Alias defiinitions
+# shellcheck disable=SC1054,SC1073,SC1083,SC1009
+{{ template "aliases.tmpl" . }}
+
+# color setup for ls, supports dircolors-solarized
+if [[ -f ~/.config/dircolors ]]; then
+  case $TERM in
+  xterm-kitty | screen-256color | gnome-256color | xterm-256color | xterm-termite)
+    # ~/.dircolors links to ~/github/dircolors-solarized/dircolors.256dark
+    [[ -x /usr/bin/dircolors ]] && eval "$(/usr/bin/dircolors ~/.config/dircolors)"
+    ;;
+  *)
+    test -x /usr/bin/dircolors && eval "$(/usr/bin/dircolors -b)"
+    ;;
+  esac
+else
+  test -x /usr/bin/dircolors && eval "$(/usr/bin/dircolors -b)"
+fi
+
+if [[ -f ~/.config/starship.toml ]]; then
+  eval "$(starship init bash)"
+else
+  PS1="\[\e[0;36m\]\u\[\e[0m\]@\[\e[0;32m\]\h\[\e[0m\]:\[\e[0;35m\]\w\[\e[0m\]> "
+fi
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/home/cs/.lmstudio/bin"
+# End of LM Studio CLI section
+
+# shellcheck disable=SC1056
+# vim: filetype=bash:

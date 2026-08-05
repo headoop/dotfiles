@@ -1,0 +1,13 @@
+#  file: /home/cs/.local/share/chezmoi/dot_config/zsh/functions/prepend-sudo
+#  git: /home/cs/.local/share/chezmoi
+
+# https://justingarrison.com/blog/2020-05-28-shell-shortcuts/
+
+[[ -z $BUFFER ]] && zle up-history
+if [[ $BUFFER == sudo\ * ]]; then
+  LBUFFER="${LBUFFER#sudo }"
+else
+  LBUFFER="sudo $LBUFFER"
+fi
+
+# vim: ft=zsh:

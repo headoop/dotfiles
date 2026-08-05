@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Type=Application
+Categories=Utility;RemoteAccess;
+Terminal=false
+Exec=/home/cs/.local/bin/win11.sh
+Name=Windows 11 (qemu)
+Comment=Windows 11 virtual machine
+Icon=/home/cs/.local/share/icons/windows11.png

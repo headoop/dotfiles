@@ -1,0 +1,73 @@
+[mgr]
+prepend_keymap = [
+  { on = [
+    "c",
+    "m",
+  ], run = "plugin chmod", desc = "Chmod on selected files" },
+  { on = "T", run = "plugin --sync max-preview", desc = "Maximize or restore preview" },
+  { on = "F", run = "plugin smart-filter", desc = "Smart filter" },
+  { on = "<C-d>", run = "plugin diff", desc = "Diff the selected with the hovered file" },
+  { on = "E", run = "shell --block --confirm nvim", desc = "run nvim" },
+  { on = [
+    "c",
+    "a",
+  ], run = "plugin compress", desc = "Archive selected files" },
+  { on = "<C-s>", run = 'shell "$SHELL" --block --confirm', desc = "Open shell here" },
+  { on = "<C-q>", run = "close", desc = "Close the current tab, or quit if it is last tab" },
+  # de_mtime and de_ctime are from my init.lua
+  # { on = [
+  #   "m",
+  #   "M",
+  # ], run = "linemode size_and_mtime", desc = "Set linemode to de_mtime" },
+  { on = [
+    "m",
+    "M",
+  ], run = "linemode size_and_de_mtime", desc = "Set linemode to size and de_mtime" },
+  { on = [
+    "m",
+    "m",
+  ], run = "linemode de_mtime", desc = "Set linemode to de_mtime" },
+  { on = [
+    "m",
+    "c",
+  ], run = "linemode de_ctime", desc = "Set linemode to de_ctime" },
+  { on = [
+    ",",
+    "m",
+  ], run = [
+    "sort modified --reverse=no",
+    "linemode de_mtime",
+  ], desc = "Sort by modified time" },
+  { on = [
+    ",",
+    "M",
+  ], run = [
+    "sort modified --reverse",
+    "linemode de_mtime",
+  ], desc = "Sort by reverse modified time" },
+  { on = [
+    ",",
+    "c",
+  ], run = [
+    "sort created --reverse=no",
+    "linemode de_ctime",
+  ], desc = "Sort by creation time" },
+  { on = [
+    ",",
+    "C",
+  ], run = [
+    "sort created --reverse",
+    "linemode de_ctime",
+  ], desc = "Sort by reverse creation time" },
+  { on = "+", run = "tab_switch 1 --relative", desc = "Switch to the next tab" },
+  { on = "ü", run = "tab_switch -1 --relative", desc = "Switch to the previous tab" },
+  #{ on = ">", run = "tab_switch 1 --relative", desc = "Switch to the next tab" },
+  #{ on = "<"< run = "tab_switch -1 --relative", desc = "Switch to the previous tab" },
+  { on = "<C-M>", run = "plugin mount", desc = "Manage mounts" },
+  { on = [
+    "y",
+  ], run = [
+    "yank",
+    'plugin clipboard -- --action=copy',
+  ], desc = "yank and copy to system clipboard" },
+]

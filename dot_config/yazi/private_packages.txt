@@ -1,0 +1,12 @@
+yazi-rs/plugins:chmod
+yazi-rs/plugins:smart-filter
+yazi-rs/plugins:diff
+KKV9/compress
+Sonico98/exifaudio
+Reledia/glow
+kirasok/epub-preview
+macydnah/office
+XYenon/clipboard
+AnirudhG07/rich-preview
+yazi-rs/plugins:mount
+BennyOe/tokyo-night

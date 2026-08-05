@@ -1,0 +1,160 @@
+set header_cache          = ~/.cache/mutt
+# from: https://wiki.archlinux.org/title/Mutt
+set message_cachedir      = ~/.cache/mutt
+
+# Optional: Löscht Cache-Einträge, die älter als X Tage sind
+set header_cache_pagesize = 7
+#
+set imap_keepalive        = 300
+set mail_check            = 120
+set send_charset          = "us-ascii:utf-8"
+set print_command         = "/usr/bin/muttprint %s -p GraustufenNormalDuplex"
+set mailcap_path          = "~/.config/neomutt/mailcap"
+auto_view text/html
+alternative_order text/plain text/html
+
+## h to exit in every menu, l to go deeper, j and k for up and down, g and G for top and bottom
+bind index          ^   imap-fetch-mail
+# bind pager,browser	h			exit
+# bind attach,alias		h			exit
+bind pager,browser <left> exit
+bind attach,alias <left> exit
+# bind pager				  l			view-attachments
+bind pager				  <right>			view-attachments
+# bind pager 				  k 			previous-line
+bind pager 				  <up> 			previous-line
+# bind pager  				j 			next-line
+bind pager  				<down> 			next-line
+bind pager	  			g			top
+bind pager		  		G			bottom
+# bind index			  	j			next-entry
+bind index			  	<down>			next-entry
+# bind index				  k			previous-entry
+bind index				  <up>			previous-entry
+bind attach,index 	g 			first-entry
+bind attach,index 	G 			last-entry
+# bind index	  			l			display-message
+bind index	  			<right>			display-message
+# bind attach		  		l			view-attach
+bind attach		  		<right>			view-attach
+# bind browser,alias	l			select-entry
+bind browser,alias	<right>			select-entry
+bind index				  /			search
+## default binding for limit is l
+# bind index			  	?			limit
+## default binding for help is ?
+# bind index,pager,attach			<F1>			help
+## default binding for header view (toggle-weed) is h
+bind pager				  H			display-toggle-weed
+bind attach,index,pager 		\CD 			next-page
+bind attach,index,pager 		\CU 			previous-page
+# bind index h exit
+
+# sidebar settings
+set sidebar_format = '%B%<F? [%F]>%* %<N?%N/>%S'
+# Move the highlight to the previous mailbox
+bind index,pager \Cp sidebar-prev
+# Move the highlight to the next mailbox
+bind index,pager \Cn sidebar-next
+# Open the highlighted mailbox
+bind index,pager \Co sidebar-open
+# Move the highlight to the previous page
+# This is useful if you have a LOT of mailboxes.
+bind index,pager <F3> sidebar-page-up
+# Move the highlight to the next page
+# This is useful if you have a LOT of mailboxes.
+bind index,pager <F4> sidebar-page-down
+# Move the highlight to the previous mailbox containing new, or flagged,
+# mail.
+bind index,pager <F5> sidebar-prev-new
+# Move the highlight to the next mailbox containing new, or flagged, mail.
+bind index,pager <F6> sidebar-next-new
+# Toggle the visibility of the Sidebar.
+bind index,pager B sidebar-toggle-visible
+
+# If enter-command is available from the UI, it is possible to see the password
+# unencrypted, which may be undesired if anybody else than you has access to
+# your session while Mutt is running. You may want to disable it for this
+# reason. As a consequence, every command that the user intends to use must be
+# bound to a key in advance, otherwise it will never be accessible.
+bind generic,alias,attach,browser,editor,index,compose,pager,pgp,postpone ':' noop
+
+macro index I "c!\n" "Change to incoming mailfolder"
+# macro index h "c?" "browse files"
+macro index <left> "c?" "browse files"
+macro index,pager \cb "<pipe-message> urlscan<Enter>" "call urlscan to extract URLs out of a message"
+macro attach,compose \cb "<pipe-entry> urlscan<Enter>" "call urlscan to extract URLs out of a message"
+
+# gpg settings
+set pgp_decode_command="gpg --status-fd=2 %?p?--passphrase-fd 0? --no-verbose --quiet --batch --output - %f"
+set pgp_verify_command="gpg --status-fd=2 --no-verbose --quiet --batch --output - --verify %s %f"
+set pgp_decrypt_command="gpg --status-fd=2 %?p?--passphrase-fd 0? --no-verbose --quiet --batch --output - %f"
+set pgp_sign_command="gpg --no-verbose --batch --quiet --output - %?p?--passphrase-fd 0? --armor --detach-sign --textmode %?a?-u %a? %f"
+set pgp_clearsign_command="gpg --no-verbose --batch --quiet --output - %?p?--passphrase-fd 0? --armor --textmode --clearsign %?a?-u %a? %f"
+set pgp_encrypt_only_command="pgpewrap gpg --batch --quiet --no-verbose --output - --encrypt --textmode --armor --always-trust -- -r %r -- %f"
+set pgp_encrypt_sign_command="pgpewrap gpg %?p?--passphrase-fd 0? --batch --quiet --no-verbose --textmode --output - --encrypt --sign %?a?-u %a? --armor --always-trust -- -r %r -- %f"
+set pgp_import_command="gpg --no-verbose --import %f"
+set pgp_export_command="gpg --no-verbose --export --armor %r"
+set pgp_verify_key_command="gpg --verbose --batch --fingerprint --check-sigs %r"
+set pgp_list_pubring_command="gpg --no-verbose --batch --quiet --with-colons --with-fingerprint --with-fingerprint --list-keys %r"
+set pgp_list_secring_command="gpg --no-verbose --batch --quiet --with-colons --with-fingerprint --with-fingerprint --list-secret-keys %r"
+set pgp_good_sign="^\\[GNUPG:\\] GOODSIG"
+set pgp_check_gpg_decrypt_status_fd
+
+# Palette for use with the Linux console.  Black background.
+# color hdrdefault blue black
+# color quoted blue black
+# color signature blue black
+# color attachment red black
+# color prompt brightmagenta black
+# color message brightred black
+# color error brightred black
+# color indicator black red
+# color status brightgreen blue
+# color tree white black
+# color normal white black
+# color markers red black
+# color search white black
+# color tilde brightmagenta black
+# color index blue black ~F
+# color index red black "~N|~O"
+#
+# color body brightwhite black '\*+[^*]+\*+'
+# color body brightwhite black '_+[^_]+_+'
+
+# catppuccin moca colors, colors are defind from kitty with catppuccin-mocha.conf
+color normal		  default default         # Text is "Text"
+color index		    color2 default ~N       # New Messages are Green
+color index		    color2 default ~O       # New Messages are Green
+color index		    color1 default ~F       # Flagged messages are Red
+color index		    color13 default ~T      # Tagged Messages are Red
+color index		    color1 default ~D       # Messages to delete are Red
+color attachment	color5 default          # Attachments are Pink
+color signature	  color8 default          # Signatures are Surface 2
+color search		  color4 default          # Highlighted results are Blue
+
+color indicator		default color8          # currently highlighted message Surface 2=Background Text=Foreground
+color error		    color1 default          # error messages are Red
+color status		  color15 default         # status line "Subtext 0"
+color tree        color15 default         # thread tree arrows Subtext 0
+color tilde       color15 default         # blank line padding Subtext 0
+
+color hdrdefault  color13 default         # default headers Pink
+color header		  color13 default "^From:"
+color header	 	  color13 default "^Subject:"
+
+color quoted		  color15 default         # Subtext 0
+color quoted1		  color7 default          # Subtext 1
+color quoted2		  color8 default          # Surface 2
+color quoted3		  color0 default          # Surface 1
+color quoted4		  color0 default
+color quoted5		  color0 default
+
+color body		color2 default		[\-\.+_a-zA-Z0-9]+@[\-\.a-zA-Z0-9]+               # email addresses Green
+color body	  color2 default		(https?|ftp)://[\-\.,/%~_:?&=\#a-zA-Z0-9]+        # URLs Green
+color body		color4 default		(^|[[:space:]])\\*[^[:space:]]+\\*([[:space:]]|$) # *bold* text Blue
+color body		color4 default		(^|[[:space:]])_[^[:space:]]+_([[:space:]]|$)     # _underlined_ text Blue
+color body		color4 default		(^|[[:space:]])/[^[:space:]]+/([[:space:]]|$)     # /italic/ text Blue
+
+color sidebar_flagged   color1 default    # Mailboxes with flagged mails are Red
+color sidebar_new       color10 default   # Mailboxes with new mail are Green

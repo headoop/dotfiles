@@ -1,0 +1,10 @@
+#!/usr/bin/zsh
+#
+
+e=${EDITOR:-nvim}
+arg="$@"
+for i (, . ! \?); do
+  arg=${arg//$i/}
+done
+arg=${arg// /-}
+$e "${(L)arg}.txt"

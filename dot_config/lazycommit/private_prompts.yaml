@@ -1,0 +1,5 @@
+language: English
+num_suggestions: 10
+# system_message: ...
+# commit_message_template: "... %s"   # %s is replaced by the diff
+# pr_title_template: "... %s"

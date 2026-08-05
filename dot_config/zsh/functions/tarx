@@ -1,0 +1,54 @@
+# Define internal usage function
+usage() {
+    echo "extract content of various compressed files"
+    echo "usage: $0 name <compressedfile>"
+}
+
+# Check for empty arguments or help flag
+if [[ -z "$1" || "$1" == "-h" ]]; then
+    usage
+    return
+fi
+
+# Check if the file exists
+if [[ -f "$1" ]]; then
+    # Convert filename to lowercase using Zsh parameter expansion
+    local _file_lower="${1:l}"
+
+    case "$_file_lower" in
+        *.tar.bz2|*.tbz)
+            tar xjf "$1"
+            ;;
+        *.tar.gz|*.tgz)
+            tar xzf "$1"
+            ;;
+        *.tar.xz)
+            tar xJf "$1"
+            ;;
+        *.tar)
+            tar xf "$1"
+            ;;
+        *.zip)
+            unzip "$1" [cite: 4]
+            ;;
+        *.rar)
+            unrar "$1" [cite: 4]
+            ;;
+        *.bz2)
+            bunzip2 "$1" [cite: 4]
+            ;;
+        *.gz|*.gzip)
+            gunzip "$1" [cite: 4]
+            ;;
+        *.z|*.Z)
+            uncompress "$1" [cite: 5]
+            ;;
+        *)
+            echo "unknown archive format"
+            ;;
+    esac
+else
+    echo "not a valid file"
+fi
+
+# vim: ft=zsh:
