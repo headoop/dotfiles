@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
-# Druckt eine Rezept-Datei: wandelt sie per pandoc/pdflatex in ein PDF um
-# (2cm linker Rand, Helvetica, 11pt) und leitet dieses an lpr weiter.
-# Optionen: -f Datei, -d Duplexdruck, -c Farbdruck, -h Hilfe;
-# Standard ist einseitig/Graustufen auf Drucker GraustufenNormalDuplex.
+# Druckt eine Rezept-Datei: wandelt sie per pandoc/xelatex in ein PDF um
+# (20mm linker Rand, Source Serif 4, 11pt) und leitet dieses an lpr weiter.
+# Optionen: -f Datei, -s einseitig, -c Farbdruck, -p Drucker, -h Hilfe;
+# Standard ist beidseitig/Graustufen auf Drucker GraustufenNormalDuplex.
 
+set -uo pipefail
+
+# Konfiguration
+#--------------
 # pdf_engine="pdflatex"
 pdf_engine="xelatex" # handles UTF8 better and can use all system fonts (ttf/otf)
 margin_top="5mm"
@@ -20,11 +24,11 @@ papersize="a4"
 pagestyle="empty" # no page numbers
 pandoc="/usr/bin/pandoc"
 lpr="/usr/bin/lpr"
-#FILE="$1"
-# TODO: Drucker-Auswahl Abfrage
-# PRINTER="Graustufen300Duplex"
-# PRINTER="BrotherGraustufenNormalDuplex"
-PRINTER="GraustufenNormalDuplex"
+# Drucker (per -p/--printer überschreibbar)
+# Druckerliste mit lpstat -von
+printer_default="GraustufenNormalDuplex"
+
+# lpr-Optionen, siehe Brother-Treiber
 #duplex="-o Duplex=DuplexNoTumble"
 #media="-o BRMediaType=PlainDuplex"
 #color="-o BRMonoColor=Color"
@@ -32,10 +36,24 @@ PRINTER="GraustufenNormalDuplex"
 #resolution="-o BRResolution=PlainFast"
 #resolution="-o BRResolution=PlainNormal"
 
+# Laufzeit-Zustand, wird von _parse_args gesetzt
+#-----------------------------------------------
+file=""
+printer="$printer_default"
+duplex_opts=(-o "Duplex=DuplexNoTumble") # print both sides per default
+color_opts=(-o "BRMonoColor=Mono")
+tmp_pdf=""
+
 # functions
 _exit() {
   echo "$1"
   exit 1
+}
+
+_cleanup() {
+  if [[ -n "$tmp_pdf" ]]; then
+    rm -f "$tmp_pdf"
+  fi
 }
 
 _help() {
@@ -43,118 +61,142 @@ _help() {
   echo "print recipe"
   echo ""
   echo "Usage:"
-  echo "-h | --help       this help"
-  echo "-c | --color      print colored"
-  echo "-d | --duplex     print two sided"
-  echo "-f | --file       filename"
-
+  echo "-h | --help          this help"
+  echo "-c | --color         print colored"
+  echo "-s | --single-sided  print one sided (default is two sided)"
+  echo "-f | --file          filename"
+  echo "-p | --printer       printer name (default: $printer_default)"
   echo ""
-  exit
+  echo "known printers: GraustufenNormalDuplex, Graustufen300Duplex,"
+  echo "                BrotherGraustufenNormalDuplex"
+  echo ""
+  exit "${1:-0}"
 }
 
-# modern getopt installed?
-#-------------------------
-getopt -T &>/dev/null
-exit_code="$?"
-if [ $exit_code -ne 4 ]; then
-  echo
-  echo "modern getopt from linux-utils is needed"
-  echo
-  exit $exit_code
-fi
-# pandoc installed?
-[[ -x "$pandoc" ]] || _exit "pandoc not found"
-# lpr installed?
-[[ -x "$lpr" ]] || _exit "lpr not found"
+_check_requirements() {
+  # modern getopt installed?
+  #-------------------------
+  getopt -T &>/dev/null
+  local exit_code="$?"
+  if [[ $exit_code -ne 4 ]]; then
+    echo
+    echo "modern getopt from linux-utils is needed"
+    echo
+    exit "$exit_code"
+  fi
+  # pandoc installed?
+  [[ -x "$pandoc" ]] || _exit "pandoc not found"
+  # lpr installed?
+  [[ -x "$lpr" ]] || _exit "lpr not found"
+}
 
-# call help when no argument is given
-if [[ $# -eq 0 ]]; then
-  _help
-fi
+_parse_args() {
+  local opts exit_code help=false file_set=false
 
-# getting arguments
-OPTS=$(getopt -o hdcf: --long help,duplex,color,file: -n 'print-recipe' -- "$@")
-exit_code="$?"
-if [ $exit_code != 0 ]; then
-  _help
-fi
+  # getting arguments
+  opts=$(getopt -o hscf:p: --long help,single-sided,color,file:,printer: \
+    -n 'rezept-drucken.sh' -- "$@")
+  exit_code="$?"
+  if [[ $exit_code -ne 0 ]]; then
+    _help 1
+  fi
 
-# DEBUG
-#echo "$OPTS"
-eval set -- "$OPTS"
+  eval set -- "$opts"
 
-# default options
-HELP=false
-FILE_SET=false
-# DUPLEX="-o Duplex=None"
-DUPLEX="-o Duplex=DuplexNoTumble" # print both sides per default
-COLOR="-o BRMonoColor=Mono"
+  # processing arguments
+  while true; do
+    case "$1" in
+    -h | --help)
+      help=true
+      shift
+      ;;
+    -s | --single-sided)
+      duplex_opts=(-o "Duplex=None")
+      shift
+      ;;
+    -c | --color)
+      color_opts=(-o "BRMonoColor=Color")
+      shift
+      ;;
+    -f | --file)
+      file="$2"
+      file_set=true
+      shift 2
+      ;;
+    -p | --printer)
+      printer="$2"
+      shift 2
+      ;;
+    --)
+      shift
+      break
+      ;;
+    *) break ;;
+    esac
+  done
 
-# processing arguments
-while true; do
-  case "$1" in
-  -h | --help)
-    HELP=true
-    shift
-    ;;
-  # -d | --duplex)
-  -o | --one-sided)
-    DUPLEX="-o Duplex=None"
-    shift
-    ;;
-  -c | --color)
-    COLOR="-o BRMonoColor=Color"
-    shift
-    ;;
-  -f | --file)
-    FILE="$2"
-    FILE_SET=true
-    shift
-    shift
-    ;;
-  --)
-    shift
-    break
-    ;;
-  *) break ;;
-  esac
-done
+  # positional argument as fallback filename
+  #-------------------------------------------
+  if [[ "$file_set" == "false" && -n "${1:-}" ]]; then
+    file="$1"
+  fi
 
-# positional argument as fallback filename
-#-------------------------------------------
-if [ "$FILE_SET" == "false" ] && [ -n "$1" ]; then
-  FILE="$1"
-fi
+  # run help and quit
+  #------------------
+  if [[ "$help" == "true" ]]; then
+    _help
+  fi
 
-# run help and quit
-#------------------
-if [ "$HELP" == "true" ]; then
-  _help
-fi
+  # no file given -> show help
+  #----------------------------
+  if [[ -z "$file" ]]; then
+    _help 1
+  fi
 
-# no file given -> show help
-#----------------------------
-if [ -z "$FILE" ]; then
-  _help
-fi
+  [[ -f "$file" ]] || _exit "file not found: $file"
+  [[ -n "$printer" ]] || _exit "no printer given"
+}
 
-if [ ! -f "$FILE" ]; then
-  echo "file not found"
-  _exit
-fi
+_make_pdf() {
+  # "$pandoc" --pdf-engine="$pdf_engine" -V geometry:margin="$margin" -V fontfamily="$font" -V fontsize="$fontsize" -s "$FILE" -t pdf | "$lpr" -P "$PRINTER" "$DUPLEX" "$COLOR"
+  # "$pandoc" --pdf-engine="$pdf_engine" -V geometry:top=0mm -V geometry:left=20mm -V geometry:bottom=0cm -V fontfamily="$font" -V fontsize="$fontsize" -s "$FILE" -t pdf | "$lpr" -P "$PRINTER" "$DUPLEX" "$COLOR"
+  # pandoc --pdf-engine="pdflatex" -V geometry:top="5mm" -V geometry:left="20mm" -V geometry:right="5mm" -V geometry:bottom="5mm" -V fontfamily="helvet" -V fontsize="11pt" -V papersize="a4" -s
+  "$pandoc" --pdf-engine="$pdf_engine" \
+    -V geometry:top="$margin_top" \
+    -V geometry:left="$margin_left" \
+    -V geometry:right="$margin_right" \
+    -V geometry:bottom="$margin_bottom" \
+    -V mainfont="$mainfont" \
+    -V fontsize="$fontsize" \
+    -V linestretch="$linestretch" \
+    -V papersize="$papersize" \
+    -V pagestyle="$pagestyle" \
+    -s "$file" -o "$tmp_pdf" || _exit "pandoc could not convert $file"
+}
 
-# print
-# "$pandoc" --pdf-engine="$pdf_engine" -V geometry:margin="$margin" -V fontfamily="$font" -V fontsize="$fontsize" -s "$FILE" -t pdf | "$lpr" -P "$PRINTER" "$DUPLEX" "$COLOR"
-# "$pandoc" --pdf-engine="$pdf_engine" -V geometry:top=0mm -V geometry:left=20mm -V geometry:bottom=0cm -V fontfamily="$font" -V fontsize="$fontsize" -s "$FILE" -t pdf | "$lpr" -P "$PRINTER" "$DUPLEX" "$COLOR"
-# pandoc --pdf-engine="pdflatex" -V geometry:top="5mm" -V geometry:left="20mm" -V geometry:right="5mm" -V geometry:bottom="5mm" -V fontfamily="helvet" -V fontsize="11pt" -V papersize="a4" -s
-"$pandoc" --pdf-engine="$pdf_engine" \
-  -V geometry:top="$margin_top" \
-  -V geometry:left="$margin_left" \
-  -V geometry:right="$margin_right" \
-  -V geometry:bottom="$margin_bottom" \
-  -V mainfont="$mainfont" \
-  -V fontsize="$fontsize" \
-  -V linestretch="$linestretch" \
-  -V papersize="$papersize" \
-  -V pagestyle="$pagestyle" \
-  -s "$FILE" -t pdf | "$lpr" -P "$PRINTER" "$DUPLEX" "$COLOR"
+_print_pdf() {
+  "$lpr" -P "$printer" "${duplex_opts[@]}" "${color_opts[@]}" "$tmp_pdf" ||
+    _exit "lpr could not print $file on $printer"
+}
+
+main() {
+  trap _cleanup EXIT
+
+  _check_requirements
+
+  # call help when no argument is given
+  if [[ $# -eq 0 ]]; then
+    _help
+  fi
+
+  _parse_args "$@"
+
+  # erst das PDF bauen, dann drucken - so landet bei einem pandoc-Fehler
+  # kein leerer Auftrag in der Druckerwarteschlange
+  tmp_pdf="$(mktemp --tmpdir rezept-drucken-XXXXXXXX.pdf)" ||
+    _exit "could not create temporary file"
+  _make_pdf
+  _print_pdf
+}
+
+main "$@"
