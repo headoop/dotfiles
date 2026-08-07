@@ -69,6 +69,11 @@ Verify the import
 gpg --list-secret-keys
 ```
 
+The fingerprint of the GPG key is stored directly (in plain text) in the
+neomutt config `~/.config/neomutt/mailbox_main_muttrc` as `pgp_default_key`.
+A fingerprint is public information, so there is no problem with publishing it.
+If you ever switch to a new GPG key, adjust it there.
+
 ## Setup github login and chezmoi
 
 If your new host has a graphical environment, generate a ssh key and add it
@@ -108,6 +113,9 @@ Replace $GITHUB_USERNAME with your github username.
 
 Setup pass with your GPG key, then restore the pass store from backup or other host.
 This ensures, that password templates in other dotfiles can access the passwords.
+
+`~/.password-store` is **not** managed with chezmoi, because this repository is
+public on GitHub. You have to restore it by hand:
 
 ```bash
 pass init YOUR_KEY_ID
@@ -157,4 +165,5 @@ cma
 ## von Hand zu erledigen
 
 - ~/.config/birthday/config aus bitwarden oder dem Backup wieder herstellen
-- ~/.password-store aus dem Backup wieder herstellen
+- ~/.password-store aus dem Backup wieder herstellen (wird nicht von chezmoi
+  verwaltet, weil dieses Repository öffentlich auf GitHub liegt)

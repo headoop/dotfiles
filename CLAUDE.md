@@ -40,8 +40,7 @@ literal target names. Key prefixes/suffixes used throughout this repo:
 
 - `dot_` → target starts with `.` (e.g. `dot_zshrc.tmpl` → `~/.zshrc`,
   `dot_config/` → `~/.config/`)
-- `private_` → target file gets mode 0600 (used for anything containing secrets
-  or credentials, e.g. `private_dot_password-store/`,
+- `private_` → target file gets mode 0600 (e.g.
   `dot_config/private_starship.toml`,
   `dot_config/lazycommit/private_config.yaml`)
 - `executable_` → target file gets the executable bit (all scripts in `dot_local/bin/`)
@@ -58,10 +57,14 @@ When asked to "edit `~/.zshrc`" or similar, map the target path back to its
 
 ## Secrets
 
-Secrets (API keys, mail passwords, GPG-related config) are never stored in
-plaintext in this repo. They are stored in the `pass` password store
-(`private_dot_password-store/`, itself chezmoi-managed and GPG-encrypted) and
-pulled into rendered files via the `pass` template function, e.g.:
+**This repo is public on GitHub.** Nothing that is actually secret may be
+committed here.
+
+Secrets (API keys, mail passwords) are never stored in plaintext in this repo.
+They are stored in the `pass` password store in `~/.password-store`, which is
+**not** managed by chezmoi (precisely because this repo is public) — it is
+restored by hand on a new host from a backup or another host. Templates pull
+the secrets into the rendered files via the `pass` template function, e.g.:
 
 ```
 export ANTHROPIC_API_KEY="{{ pass "ANTHROPIC_API_KEY" }}"
@@ -70,6 +73,11 @@ export ANTHROPIC_API_KEY="{{ pass "ANTHROPIC_API_KEY" }}"
 See `dot_zshrc.tmpl`, `dot_bashrc.tmpl`, and
 `dot_config/neomutt/mailbox_main_muttrc.tmpl` for examples. Never hardcode a
 credential in a template as a replacement for a `pass` lookup.
+
+The GPG key fingerprint is _not_ a secret and is written directly into the
+neomutt config (`set pgp_default_key` in
+`dot_config/neomutt/mailbox_main_muttrc.tmpl`) — no `pass` lookup needed for
+it. Only the private key material and the passwords it protects are sensitive.
 
 ## Shared templates (`.chezmoitemplates/`)
 
@@ -93,8 +101,8 @@ map a human uses to find things, not something derivable from a single file.
 
 `README.md` documents the full flow for provisioning a new machine: install
 chezmoi, pass and gnupg, transfer the GPG secret key + ownertrust to the new
-host, set up GitHub SSH auth, `pass init`, restore `.password-store` first from
-backup/other host, then `chezmoi apply` for everything else (a second `apply`
-may be needed since templates depending on `pass` can't render until the
-password store exists). Keep this doc in sync if the bootstrap steps in this
-repo change.
+host, set up GitHub SSH auth, `pass init`, restore `~/.password-store` by hand
+first from backup/other host (chezmoi does not manage it), then `chezmoi apply`
+for everything else (a second `apply` may be needed since templates depending
+on `pass` can't render until the password store exists). Keep this doc in sync
+if the bootstrap steps in this repo change.
