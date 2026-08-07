@@ -162,8 +162,8 @@ or its aliases:
 cma
 ```
 
-## von Hand zu erledigen
+## To be done by hand
 
-- ~/.config/birthday/config aus bitwarden oder dem Backup wieder herstellen
-- ~/.password-store aus dem Backup wieder herstellen (wird nicht von chezmoi
-  verwaltet, weil dieses Repository öffentlich auf GitHub liegt)
+- restore ~/.config/birthday/config from bitwarden or from the backup
+- restore ~/.password-store from the backup (it is not managed with chezmoi,
+  because this repository is public on GitHub)
