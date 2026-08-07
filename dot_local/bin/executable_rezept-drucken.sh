@@ -25,7 +25,7 @@ pagestyle="empty" # no page numbers
 pandoc="/usr/bin/pandoc"
 lpr="/usr/bin/lpr"
 # Drucker (per -p/--printer überschreibbar)
-# Druckerliste mit lpstat -von
+# Druckerliste mit lpstat -v
 printer_default="GraustufenNormalDuplex"
 
 # lpr-Optionen, siehe Brother-Treiber
