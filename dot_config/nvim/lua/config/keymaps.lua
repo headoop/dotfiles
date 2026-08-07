@@ -35,6 +35,7 @@ for _, recipe in ipairs({
   { "TV", "#vegan", "vegan" },
   { "Ta", "#asiatisch", "asiatisch" },
   { "Tc", "#chinesisch", "chinesisch" },
+  { "TC", "#curry", "Curry" },
   { "Td", "#dessert", "Dessert" },
   { "Tf", "#fleisch", "Fleisch" },
   { "Tg", "#griechisch", "griechisch" },
