@@ -24,6 +24,8 @@ papersize="a4"
 pagestyle="empty" # no page numbers
 pandoc="/usr/bin/pandoc"
 lpr="/usr/bin/lpr"
+# Wird durchsucht, wenn die Datei nicht im aktuellen Verzeichnis liegt
+recipe_dir="$HOME/Dokumente/Rezepte"
 # Drucker (per -p/--printer überschreibbar)
 # Druckerliste mit lpstat -v
 printer_default="GraustufenNormalDuplex"
@@ -151,6 +153,13 @@ _parse_args() {
   #----------------------------
   if [[ -z "$file" ]]; then
     _help 1
+  fi
+
+  # nicht gefunden -> im Rezepteverzeichnis nachsehen, damit der Aufruf
+  # auch aus einem anderen Verzeichnis heraus klappt
+  #-------------------------------------------------------------------
+  if [[ ! -f "$file" && -f "$recipe_dir/$file" ]]; then
+    file="$recipe_dir/$file"
   fi
 
   [[ -f "$file" ]] || _exit "file not found: $file"

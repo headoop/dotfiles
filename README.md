@@ -32,6 +32,17 @@
 - ~/.local/bin/rezept-suchen.sh
 - ~/.local/bin/win11.sh
 
+## which shell completions are managed with chezmoi?
+
+- ~/.config/zsh/completions/_rezept-drucken.sh (zsh)
+- ~/.local/share/bash-completion/completions/rezept-drucken.sh (bash, plus the
+  symlink rd for the alias)
+
+The zsh completions directory is added to `fpath` in ~/.zshrc before `compinit`
+runs, otherwise the files are not picked up. Bash sources
+/usr/share/bash-completion/bash_completion in ~/.bashrc, which then loads
+~/.local/share/bash-completion/completions/ on demand.
+
 ## On the new host, install chezmoi and some other needed programs
 
 ```bash

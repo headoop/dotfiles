@@ -15,6 +15,10 @@ bind "TAB:menu-complete"
 
 [[ -x /usr/bin/lesspipe.sh ]] && eval "$(lesspipe.sh)"
 
+# Completions, laedt auch ~/.local/share/bash-completion/completions/*
+[[ -r /usr/share/bash-completion/bash_completion ]] &&
+  . /usr/share/bash-completion/bash_completion
+
 # shellcheck disable=SC2140 # Word is of the form "A"B"C" (B indicated). Did you mean "ABC" or "A\"B\"C"?
 export ANTHROPIC_API_KEY="{{ pass "ANTHROPIC_API_KEY" }}"
 export OPENAI_API_KEY="{{ pass "OPENAI_API_KEY" }}"
