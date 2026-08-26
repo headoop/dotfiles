@@ -358,9 +358,9 @@ gestures {
 
 // force all windows to open in a maximized state
 // Mod+F to toggle this
-window-rule {
-    open-maximized true
-}
+// window-rule {
+//     open-maximized true
+// }
 
 // Work around WezTerm's initial configure bug
 // by setting an empty default-column-width.
