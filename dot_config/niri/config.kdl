@@ -345,6 +345,13 @@ overview {
     zoom 0.25
 }
 
+gestures {
+  // Disable overview when mousing over the top left of primary screen
+  hot-corners {
+    off
+  }
+}
+
 // Window rules let you adjust behavior for individual windows.
 // Find more information on the wiki:
 // https://niri-wm.github.io/niri/Configuration:-Window-Rules
