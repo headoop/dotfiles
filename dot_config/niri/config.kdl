@@ -372,24 +372,25 @@ overview {
     // This regular expression is intentionally made as specific as possible,
     // since this is the default config, and we want no false positives.
     // You can get away with just app-id="wezterm" if you want.
-    match app-id=r#"^org\.wezfurlong\.wezterm$"#
-    default-column-width {}
+    match app-id=r"^org\.wezfurlong\.wezterm$"
+    default-column-width {
+    }
 }
 
 // Open the Firefox picture-in-picture player as floating by default.
 window-rule {
-    match app-id=r#"^xdg-desktop-portal$"#
+    match app-id=r"^xdg-desktop-portal$"
     open-floating true
 }
 
 window-rule {
-    match app-id=r#"^dot.float.thunar$"#
+    match app-id=r"^dot.float.thunar$"
     open-floating true
     default-column-width { proportion 0.33333; }
 }
 
 window-rule {
-    match app-id=r#"firefox$"# title="^Bild-im-Bild$"
+    match app-id=r"firefox$" title="^Bild-im-Bild$"
     open-floating true
     default-column-width { fixed 600; }
     default-window-height { fixed 350; }
@@ -397,7 +398,7 @@ window-rule {
 }
 
 window-rule {
-  match app-id="udiskie" title=r#"udiskie"#
+  match app-id="udiskie" title=r"udiskie"
   open-floating true
   default-column-width { fixed 500; }
   default-window-height { fixed 300; }
@@ -414,9 +415,9 @@ window-rule {
 // Example: block out two password managers from screen capture.
 // (This example rule is commented out with a "/-" in front.)
 window-rule {
-    match app-id=r#"^org\.keepassxc\.KeePassXC$"#
-    match app-id=r#"^org\.gnome\.World\.Secrets$"#
-    match app-id=r#"^Bitwarden$"#
+    match app-id=r"^org\.keepassxc\.KeePassXC$"
+    match app-id=r"^org\.gnome\.World\.Secrets$"
+    match app-id=r"^Bitwarden$"
 
     // block-out from internal and external screenshot tools
     block-out-from "screen-capture"
@@ -433,12 +434,12 @@ window-rule {
 }
 
 window-rule {
-    match app-id="steam" title=r#"^notificationtoasts_\d+_desktop$"#
+    match app-id="steam" title=r"^notificationtoasts_\d+_desktop$"
     default-floating-position x=10 y=10 relative-to="bottom-right"
 }
 
 window-rule {
-    match app-id=r#"^org\.gnome\.Calculator$"# title="Taschenrechner"
+    match app-id=r"^org\.gnome\.Calculator$" title="Taschenrechner"
     open-floating true
   // default-column-width { fixed 400; }
   // default-window-height { fixed 800; }
@@ -468,19 +469,19 @@ window-rule {
 }
 // open betterbird on 3rd workspace right after login
 window-rule {
-  match app-id=r#"^eu\.betterbird\.Betterbird$"# at-startup=true
+  match app-id=r"^eu\.betterbird\.Betterbird$" at-startup=true
   open-on-workspace "mail"
   open-focused false
 }
 
 window-rule {
-  match app-id=r#"^chrome-hnpfjngllnobngcgfapefoaidbinmjnm-Default$"# at-startup=true
+  match app-id=r"^chrome-hnpfjngllnobngcgfapefoaidbinmjnm-Default$" at-startup=true
   open-on-workspace "mail"
   open-focused false
 }
 
 window-rule {
-  match app-id=r#"^signal"# title="Signal" at-startup=true
+  match app-id=r"^signal" title="Signal" at-startup=true
   open-on-workspace "mail"
   open-focused false
 }
@@ -492,7 +493,7 @@ window-rule {
   // - Flatpak Firefox (app-id is "org.mozilla.firefox")
   // match app-id=r#"firefox$"# title="^Picture-in-Picture$"
   // Title: "1 Erinnerung"
-  match app-id=r#"^eu\.betterbird\.Betterbird$"# title=r#"^\d+ Erinnerung(en)?$"#
+  match app-id=r"^eu\.betterbird\.Betterbird$" title=r"^\d+ Erinnerung(en)?$"
   // match app-id=r#"^org\.mozilla\.Thunderbird$"# title=r#"^\d+ Erinnerung(en)?$"#
   // match app-id=r#"^eu\.betterbird\.Betterbird$"# title=r#"^[0-9]+ Erinnerung(en)?$"#
   // match app-id=r#"^eu\.betterbird\.Betterbird"# title=r#"^.* Erinnerungen$"#
@@ -515,7 +516,7 @@ window-rule {
 
 window-rule {
   // match app-id=r#"^eu\.betterbird\.Betterbird$"# title=r#"^\d+ Erinnerung(en)?$"#
-  match app-id=r#"^eu\.betterbird\.Betterbird$"# title=r#"^Verfassen:.*"#
+  match app-id=r"^eu\.betterbird\.Betterbird$" title=r"^Verfassen:.*"
   // exclude title="^.*Betterbird$"
   open-floating true
   // 80% of the screen high.
@@ -594,15 +595,15 @@ binds {
     // XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.02-"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn "dms" "ipc" "call" "audio" "decrement" "3"; }
     // XF86AudioMute        allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
-    XF86AudioMute        allow-when-locked=true { spawn "dms" "ipc" "call" "audio" "mute"; }
-    XF86AudioMicMute     allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
+    XF86AudioMute allow-when-locked=true { spawn "dms" "ipc" "call" "audio" "mute"; }
+    XF86AudioMicMute allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
 
     // Example media keys mapping using playerctl.
     // This will work with any MPRIS-enabled media player.
-    XF86AudioPlay        allow-when-locked=true { spawn-sh "playerctl play-pause"; }
-    XF86AudioStop        allow-when-locked=true { spawn-sh "playerctl stop"; }
-    XF86AudioPrev        allow-when-locked=true { spawn-sh "playerctl previous"; }
-    XF86AudioNext        allow-when-locked=true { spawn-sh "playerctl next"; }
+    XF86AudioPlay allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    XF86AudioStop allow-when-locked=true { spawn-sh "playerctl stop"; }
+    XF86AudioPrev allow-when-locked=true { spawn-sh "playerctl previous"; }
+    XF86AudioNext allow-when-locked=true { spawn-sh "playerctl next"; }
 
     // Example brightness key mappings for brightnessctl.
     // You can use regular spawn with multiple arguments too (to avoid going through "sh"),
@@ -610,7 +611,7 @@ binds {
     // XF86MonBrightnessUp allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "+10%"; }
     XF86MonBrightnessUp allow-when-locked=true { spawn "dms" "ipc" "call" "brightness" "increment" "5"; }
     // XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "--class=backlight" "set" "10%-"; }
-    XF86MonBrightnessDown allow-when-locked=true { spawn "dms" "ipc" "call" "brightness" "decrement" "5";}
+    XF86MonBrightnessDown allow-when-locked=true { spawn "dms" "ipc" "call" "brightness" "decrement" "5"; }
 
     XF86Calculator hotkey-overlay-title="Calculator" { spawn "gnome-calculator"; }
 
@@ -703,10 +704,10 @@ binds {
     // To avoid scrolling through workspaces really fast, you can use
     // the cooldown-ms property. The bind will be rate-limited to this value.
     // You can set a cooldown on any bind, but it's most useful for the wheel.
-    Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
-    Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
+    Mod+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
+    Mod+WheelScrollUp cooldown-ms=150 { focus-workspace-up; }
     Mod+Ctrl+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
-    Mod+Ctrl+WheelScrollUp   cooldown-ms=150 { move-column-to-workspace-up; }
+    Mod+Ctrl+WheelScrollUp cooldown-ms=150 { move-column-to-workspace-up; }
 
     Mod+WheelScrollRight      { focus-column-right; }
     Mod+WheelScrollLeft       { focus-column-left; }
