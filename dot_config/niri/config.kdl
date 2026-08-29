@@ -305,7 +305,11 @@ workspace "mail"
 spawn-at-startup "/usr/lib/mate-polkit/polkit-mate-authentication-agent-1"
 spawn-at-startup "udiskie" "--tray"
 spawn-at-startup "firefox"
-spawn-sh-at-startup "kitty --session ~/.config/kitty/startup-session.conf"
+// spawn-sh-at-startup "kitty --session ~/.config/kitty/startup-session.conf"
+spawn-sh-at-startup "kitty"
+spawn-sh-at-startup "kitty"
+spawn-at-startup "signal-desktop" "--password-store=gnome-libsecret"
+spawn-at-startup "chromium" "--profile-directory=Default" "--app-id=hnpfjngllnobngcgfapefoaidbinmjnm"
 spawn-at-startup "betterbird"
 
 hotkey-overlay {
@@ -345,12 +349,12 @@ overview {
     zoom 0.25
 }
 
-gestures {
-  // Disable overview when mousing over the top left of primary screen
-  hot-corners {
-    off
-  }
-}
+// gestures {
+//   // Disable overview when mousing over the top left of primary screen
+//   hot-corners {
+//     off
+//   }
+// }
 
 // Window rules let you adjust behavior for individual windows.
 // Find more information on the wiki:
@@ -379,6 +383,12 @@ window-rule {
 }
 
 window-rule {
+    match app-id=r#"^dot.float.thunar$"#
+    open-floating true
+    default-column-width { proportion 0.33333; }
+}
+
+window-rule {
     match app-id=r#"firefox$"# title="^Bild-im-Bild$"
     open-floating true
     default-column-width { fixed 600; }
@@ -392,6 +402,13 @@ window-rule {
   default-column-width { fixed 500; }
   default-window-height { fixed 300; }
   // default-floating-position x=10 y=10 relative-to="top-right"
+}
+
+window-rule {
+  match app-id="^soffice$" title="^Kennwortschutz"
+  open-floating true
+  // open-focused true
+  // default-floating-position x=500 y=500 relative-to="top-right"
 }
 
 // Example: block out two password managers from screen capture.
@@ -452,6 +469,18 @@ window-rule {
 // open betterbird on 3rd workspace right after login
 window-rule {
   match app-id=r#"^eu\.betterbird\.Betterbird$"# at-startup=true
+  open-on-workspace "mail"
+  open-focused false
+}
+
+window-rule {
+  match app-id=r#"^chrome-hnpfjngllnobngcgfapefoaidbinmjnm-Default$"# at-startup=true
+  open-on-workspace "mail"
+  open-focused false
+}
+
+window-rule {
+  match app-id=r#"^signal"# title="Signal" at-startup=true
   open-on-workspace "mail"
   open-focused false
 }
@@ -537,6 +566,7 @@ binds {
     Alt+Ctrl+L hotkey-overlay-title="Switch audio sinks" { spawn "dms" "ipc" "call" "audio" "cycleoutput"; }
 
     Mod+E hotkey-overlay-title="File Manager" { spawn "nautilus"; }
+    Mod+Ctrl+E hotkey-overlay-title="Thunar (floating" { spawn "thunar" "--name=dot.float.thunar"; }
 
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
