@@ -596,7 +596,8 @@ binds {
     Mod+Ctrl+comma hotkey-overlay-title="open DMS confg" { spawn "dms" "ipc" "call" "settings" "toggle"; }
 
     // open Joplin
-    Mod+XF86HomePage hotkey-overlay-title="Run Joplin" { spawn "joplin-desktop"; }
+    // Mod+XF86HomePage hotkey-overlay-title="Run Joplin" { spawn "joplin-desktop"; }
+    Mod+XF86HomePage hotkey-overlay-title="Run Joplin" { spawn "joplin"; }
 
     // Example volume keys mappings for PipeWire & WirePlumber.
     // The allow-when-locked=true property makes them work even when the session is locked.
