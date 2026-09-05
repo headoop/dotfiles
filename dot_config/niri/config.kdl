@@ -297,6 +297,7 @@ workspace "mail"
 // This line starts waybar, a commonly used bar for Wayland compositors.
 // spawn-at-startup "waybar"
 // spawn-at-startup "dms" "run"
+// spawn-sh-at-startup "nocatlia"
 
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
@@ -309,6 +310,8 @@ spawn-at-startup "firefox"
 // spawn-sh-at-startup "kitty --session ~/.config/kitty/startup-session.conf"
 spawn-sh-at-startup "kitty"
 spawn-sh-at-startup "kitty"
+// spawn-sh-at-startup "ghostty"
+// spawn-sh-at-startup "ghostty"
 spawn-at-startup "signal-desktop" "--password-store=gnome-libsecret"
 spawn-at-startup "chromium" "--profile-directory=Default" "--app-id=hnpfjngllnobngcgfapefoaidbinmjnm"
 spawn-at-startup "betterbird"
@@ -468,6 +471,14 @@ window-rule {
   open-on-workspace "terminal"
   open-focused false
 }
+
+// open ghostty on 2nd workspace right after login
+window-rule {
+  match app-id="ghostty" at-startup=true
+  open-on-workspace "terminal"
+  open-focused false
+}
+
 // open betterbird on 3rd workspace right after login
 window-rule {
   match app-id=r"^eu\.betterbird\.Betterbird$" at-startup=true
@@ -545,8 +556,10 @@ binds {
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     // Mod+T hotkey-overlay-title="Open a Terminal: alacritty" { spawn "alacritty"; }
     Mod+T hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
+    // Mod+T hotkey-overlay-title="Open a Terminal: ghostty" { spawn "ghostty"; }
     // Mod+Return hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty" "--session" "~/.config/kitty/startup-session.conf"; }
     Mod+Return hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
+    // Mod+Return hotkey-overlay-title="Open a Terminal: ghostty" { spawn "ghostty"; }
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
     Mod+Shift+G hotkey-overlay-title="Run Signal Desktop" { spawn "signal-desktop" "--password-store=gnome-libsecret"; }
 
