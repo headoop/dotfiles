@@ -1,30 +1,52 @@
+-- return {
+--   {
+--     "folke/tokyonight.nvim",
+--     lazy = true,
+--     opts = {
+--       style = "moon",
+--       transparent = true,
+--       styles = {
+--         sidebars = "transparent",
+--         floats = "transparent",
+--       },
+--     },
+--   },
+--   {
+--     "LazyVim/LazyVim",
+--     opts = {
+--       colorscheme = "tokyonight-moon",
+--     },
+--   },
+-- }
+
 return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "tokyonight-moon",
+      colorscheme = "catppuccin",
     },
   },
   {
-    "folke/tokyonight.nvim",
+    "catppuccin/nvim",
     lazy = true,
-    opts = {
-      transparent = true,
-      styles = {
-        sidebars = "transparent",
-        floats = "transparent",
-      },
-    },
+    -- "catppuccin",
+    name = "catppuccin",
+    -- priority = 1000,
+    config = function()
+      require("catppuccin").setup({
+        flavour = "mocha", -- other options: "mocha", "frappe", "macchiato"
+        transparent_background = true,
+      })
+      vim.cmd.colorscheme("catppuccin-mocha")
+    end,
   },
-  -- {
-  --   -- add config option to preconfigured colorscheme catppuccin
-  --   "catppuccin/nvim",
-  --   opts = function(_, opts)
-  --     local module = require("catppuccin.groups.integrations.bufferline")
-  --     if module then
-  --       module.get = module.get_theme
-  --     end
-  --     return opts
-  --   end,
-  -- },
+  {
+    "akinsho/bufferline.nvim",
+    optional = true,
+    opts = function(_, opts)
+      if (vim.g.colors_name or ""):find("catppuccin") then
+        opts.highlights = require("catppuccin.special.bufferline").get_theme()
+      end
+    end,
+  },
 }
