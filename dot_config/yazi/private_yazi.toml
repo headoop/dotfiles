@@ -6,9 +6,10 @@ sort_translit = true
 # linemode = "size_and_mtime"
 [opener]
 my_feh = [{ run = 'feh "$@"', block = true }]
-extract = [
-  { run = 'ouch d -y "$@"', desc = "Extract here with ouch", for = "unix" },
-]
+# decompression is built into yazi already
+# extract = [
+#   { run = 'ouch d -y "$@"', desc = "Extract here with ouch", for = "unix" },
+# ]
 # edit = [
 # 	{ run = 'nvim "$@"', block = true },
 # ]
@@ -66,11 +67,11 @@ prepend_previewers = [
   { mime = "application/ms-*", run = "office" },
   { mime = "application/msword", run = "office" },
   { url = "*.docx", run = "office" },
-  { url = "*.csv", run = "rich-preview" },                                  # for csv files
-  { url = "*.md", run = "rich-preview" },                                   # for markdown (.md) files
-  { url = "*.rst", run = "rich-preview" },                                  # for restructured text (.rst) files
-  { url = "*.ipynb", run = "rich-preview" },                                # for jupyter notebooks (.ipynb)
-  { url = "*.json", run = "rich-preview" },                                 # for json (.json) files
+  { url = "*.csv", run = "rich-preview" }, # for csv files
+  { url = "*.md", run = "rich-preview" }, # for markdown (.md) files
+  { url = "*.rst", run = "rich-preview" }, # for restructured text (.rst) files
+  { url = "*.ipynb", run = "rich-preview" }, # for jupyter notebooks (.ipynb)
+  { url = "*.json", run = "rich-preview" }, # for json (.json) files
   # { name = "*.lang_type", run = "rich-preview"} # for particular language files eg. .py, .go., .lua, etc.
   { mime = "application/{*zip,tar,bzip2,7z*,rar,xz,zstd,java-archive}", run = "ouch" },
 ]
