@@ -10,3 +10,4 @@ XYenon/clipboard
 AnirudhG07/rich-preview
 yazi-rs/plugins:mount
 BennyOe/tokyo-night
+yazi-rs/flavors:catppuccin-mocha
