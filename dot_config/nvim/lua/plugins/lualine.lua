@@ -2,6 +2,7 @@ return {
   -- lualine is default in layzvim. This file changes some settings of lualine.
   {
     "nvim-lualine/lualine.nvim",
+    event = "VimEnter", -- Forces it to wait until Neovim UI is ready
     opts = function(_, opts)
       -- Ersetze die filetype-Komponente
       opts.sections.lualine_c = {

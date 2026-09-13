@@ -28,7 +28,9 @@ return {
   },
   {
     "catppuccin/nvim",
-    lazy = true,
+    -- lazy = true,
+    lazy = false,
+    priority = 1000, -- load this first
     -- "catppuccin",
     name = "catppuccin",
     -- priority = 1000,
