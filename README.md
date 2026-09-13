@@ -4,11 +4,13 @@
 
 - bash
 - birthday
-- DankMaterialShell
+- dms-clear-clipboard.service
 - fish
 - hyprland
 - jrnl
 - kitty
+- lazycommit
+- lazygit
 - neomutt
 - niri
 - nvim
@@ -34,7 +36,7 @@
 
 ## which shell completions are managed with chezmoi?
 
-- ~/.config/zsh/completions/_rezept-drucken.sh (zsh)
+- ~/.config/zsh/completions/\_rezept-drucken.sh (zsh)
 - ~/.local/share/bash-completion/completions/rezept-drucken.sh (bash, plus the
   symlink rd for the alias)
 
