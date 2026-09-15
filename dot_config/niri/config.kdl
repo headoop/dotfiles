@@ -307,6 +307,9 @@ workspace "mail"
 
 // spawn-at-startup "sh" "-c" "wl-paste --watch cliphist store &"
 
+// spawn-at-startup "dbus-update-activation-environment" "--all"
+// spawn-at-startup "gnome-keyring-daemon" "--start" "--components=secrets,pkcs11,ssh"
+
 spawn-at-startup "/usr/lib/mate-polkit/polkit-mate-authentication-agent-1"
 spawn-at-startup "udiskie" "--tray"
 spawn-at-startup "firefox"
