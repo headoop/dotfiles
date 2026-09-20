@@ -477,6 +477,7 @@ window-rule {
   match app-id="firefox" at-startup=true
   open-on-workspace "browser"
   open-focused false
+  open-maximized true
 }
 // open kitty on 2nd workspace right after login
 window-rule {
@@ -497,6 +498,7 @@ window-rule {
   match app-id=r"^eu\.betterbird\.Betterbird$" at-startup=true
   open-on-workspace "mail"
   open-focused false
+  open-maximized true
 }
 
 window-rule {
