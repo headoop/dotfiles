@@ -379,7 +379,7 @@ overview {
 // dim unfocsued windows
 window-rule {
     match is-active=false
-    opacity 0.83
+    opacity 0.93
 }
 
 
