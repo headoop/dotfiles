@@ -19,11 +19,26 @@ disabled = true
 format = "[$symbol](cyan) "
 
 [os.symbols]
+Windows = ""
 Ubuntu = "󰕈"
-Artix = "󰣇"
+SUSE = ""
+Raspbian = "󰐿"
+Mint = "󰣭"
+Macos = "󰀵"
+Manjaro = ""
+Linux = "󰌽"
+Gentoo = "󰣨"
+Fedora = "󰣛"
+Alpine = ""
+Amazon = ""
+Android = ""
+AOSC = ""
 Arch = "󰣇"
-CachyOS = "󰣇"
-Macos = ""
+Artix = "󰣇"
+CentOS = ""
+Debian = "󰣚"
+Redhat = "󱄛"
+RedHatEnterprise = "󱄛"
 
 [character]
 # '❯' '' '➜' '⟶' '❯' '▶'
