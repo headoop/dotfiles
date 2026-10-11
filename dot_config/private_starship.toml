@@ -12,9 +12,7 @@ $status\
 $jobs\
 $character\
 """
-
 add_newline = false
-
 
 [os]
 disabled = true
@@ -29,12 +27,12 @@ Macos = ""
 
 [character]
 # '❯' '' '➜' '⟶' '❯' '▶'
-# success_symbol = "[❯](bold green)"
+success_symbol = "[❯](bold green)"
 # catppuccin mocha palette (https://lospec.com/palette-list/catppuccin-mocha)
 # success_symbol = "[❯](bold #a6e3a1)"
 # success_symbol = "[❯](bold dimmed green)"
 # success_symbol = "[❯](dimmed green)"
-success_symbol = "[❯](purple)"
+#success_symbol = "[❯](purple)"
 # catppuccin mocha palette (https://lospec.com/palette-list/catppuccin-mocha)
 # success_symbol = "[❯](bold #a6e3a1)"
 #error_symbol = "[✗](bold red)"
@@ -128,6 +126,13 @@ read_only = " [ro] "
 read_only_style = "italic dimmed bright-black"
 # truncate_to_repo = false
 
+# [directory.substitutions]
+# "Dokumente" = "󰈙 "
+# "Downloads" = " "
+# "Musik" = "󰝚 "
+# "Bilder" = " "
+# "src" = "󰲋 "
+
 [git_branch]
 format = "[$symbol $branch ]($style)"
 style = "bright-black"
@@ -219,7 +224,7 @@ disabled = false
 format = '[$symbol]($style)'
 repeat = true
 symbol = '❯'
-repeat_offset = 2            # niri session starts from a shell
+repeat_offset = 2 # niri session starts from a shell
 
 [status]
 disabled = false
