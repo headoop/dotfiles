@@ -48,6 +48,7 @@ bindkey "^Xa" _expand_alias
 zstyle ":completion:*" completer _expand_alias _complete _ignored
 zstyle ":completion:*" regular true
 
+
 # https://wiki.archlinux.org/title/Zsh
 # create a zkbd compatible hash;
 # to add other keys to this hash, see: man 5 terminfo
@@ -171,12 +172,27 @@ setopt numericglobsort # sort file10 after file9
 zstyle ":completion:*" menu no  # Disable menu selection for completions
 zstyle ":completion:*" matcher-list "m:{a-z}={A-Z}"  # Case insensitive completion
 zstyle ":completions*" list-colors "${(s.:.)LS_COLORS}"  # Colorize completion list
-zstyle ":fzf-tab:complete:cd:*" fzf-preview "ls --color=auto $realpath"  # Preview for cd completions
+# zstyle ":fzf-tab:complete:cd:*" fzf-preview "ls --color=auto $realpath"  # Preview for cd completions
+zstyle ':fzf-tab:complete:cd:*' fzf-preview "eza -1 --color=always $realpath"
 # zstyle ":fzf-tab:complete:__zoxide_z:*" fzf-preview "ls --color=auto $realpath"  # Preview for zoxide completions
-# preview directory's content with eza when completing cd
-zstyle ":fzf-tab:complete:cd:*" fzf-preview "eza -1 --color=always $realpath"
+zstyle ":fzf-tab:complete:__zoxide_z:*" fzf-preview "eza -1 --color=always $realpath"  # Preview for zoxide completions
+# disable sort when completing `git checkout`
+zstyle ':completion:*:git-checkout:*' sort false
+
+# set descriptions format to enable group support
+# NOTE: don't use escape sequences (like '%F{red}%d%f') here, fzf-tab will ignore them
+zstyle ':completion:*:descriptions' format '[%d]'
+# # custom fzf flags
+# # NOTE: fzf-tab does not follow FZF_DEFAULT_OPTS by default
+# # zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
+# # To make fzf-tab follow FZF_DEFAULT_OPTS.
+# # NOTE: This may lead to unexpected behavior since some flags break this plugin. See Aloxaf/fzf-tab#455.
+# zstyle ':fzf-tab:*' use-fzf-default-opts yes
+# switch group using `<` and `>`
+zstyle ':fzf-tab:*' switch-group '<' '>'
 
 # Path settings
+#
 [[ -d $HOME/.local/bin ]] && export PATH="$HOME/.local/bin:$PATH"
 [[ -d $HOME/.cargo/bin ]] && export PATH="$HOME/.cargo/bin:$PATH"
 [[ -d $HOME/.go/bin ]] && export PATH="$HOME/.go/bin:$PATH"
@@ -198,6 +214,10 @@ export VISUAL="nvim"
 GPG_TTY=$(tty)
 export GPG_TTY
 _eza_options=("--group" "--group-directories-first" "--icons=auto" "--color=auto")
+
+if command -v bat >/dev/null 2>&1; then
+  export MANPAGER="bat -l man -p"
+fi
 
 # Alias definitions
 {{ template "aliases.tmpl" . }}
