@@ -622,6 +622,7 @@ binds {
     // run Obsidian
     // Mod+XF86HomePage hotkey-overlay-title="Run Joplin" { spawn "joplin"; }
     Mod+XF86HomePage hotkey-overlay-title="Run Obsidian" { spawn "obsidian"; }
+    Mod+Shift+O hotkey-overlay-title="Run Obsidian" { spawn "obsidian"; }
 
     // Example volume keys mappings for PipeWire & WirePlumber.
     // The allow-when-locked=true property makes them work even when the session is locked.
