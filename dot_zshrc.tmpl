@@ -235,6 +235,7 @@ case ":$PATH:" in
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
+export PATH="/home/cs/.local/share/pnpm/bin/:$PATH"
 
 # rehash PATH if /var/cache/zsh/pacman is newer than last check
 # see also /etc/pacman.d/hooks/02-zsh-rehash.hook
