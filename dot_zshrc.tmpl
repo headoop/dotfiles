@@ -228,6 +228,11 @@ alias -g G="| grep"
 alias -g M="| more"
 alias -g NE="2>/dev/null"
 
+# suffix aliases
+alias -s md="bat"
+alias -s yaml="bat -l yaml"
+alias -s json="jless"
+
 # pnpm
 export PNPM_HOME="/home/cs/.local/share/pnpm"
 case ":$PATH:" in
